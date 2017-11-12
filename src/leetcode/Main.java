@@ -2,7 +2,11 @@ package leetcode;
 
 public class Main {
     public static void main(String[] args) {
-        // Prints "Hello, World" to the terminal window.
-        System.out.println("Hello, World");
+    	ContainerPractice cp = new ContainerPractice();
+    	cp.hashmapIter();
+    	cp.hashmapForeach();
+    	cp.listOP();
+    	cp.hashSetOP();
+        System.out.println("Func: "+Thread.currentThread().getStackTrace()[1].getMethodName());
     }
 }
