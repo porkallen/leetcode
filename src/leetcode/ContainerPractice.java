@@ -54,9 +54,10 @@ public class ContainerPractice {
 	}
 	public int listOP() {		
 		List<String> tmpList = Arrays.asList(studentDatabase);
-		List<String> cloneList = new ArrayList<String>(tmpList);
+		List<String> cloneList = new LinkedList<String>(tmpList);
 		// convert the student database into list
 		//List<String> alist = new ArrayList();
+		//cloneList.add
 		List<String> alist = new ArrayList<String>();
 		alist.addAll(cloneList);
 		Collections.sort(alist,Collections.reverseOrder());
