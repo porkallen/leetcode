@@ -4,6 +4,42 @@ import java.util.Arrays;
 import java.util.List;
 
 public class Solution {
+	public static int strDFS(int row,int col, int[][] arr,int rowLen,int colLen, int nowLen) {
+		int sum = nowLen;
+		System.out.printf("sum :%d \n",sum);
+		if(row< rowLen && col< colLen) {
+			if(arr[row][col] == 1) {
+				sum++;
+				System.out.printf("sum :%d \n",sum);
+				sum = strDFS(row+1,col+1,arr,rowLen,colLen,sum);
+			}
+		}
+		return sum;
+	}
+	public static int longestStringCompare(String s1,String s2) {
+		int[][] idxArr = new int[s1.length()][s2.length()];
+		int maxlen = 0;
+		int tmplen = 0;
+		/*O(n^3)*/
+		for(int i = 0 ; i< s1.length(); i++) {
+			for(int j = i+1 ; j < s1.length();j++) {
+				if(s2.contains(s1.substring(i, j))) {
+					if(maxlen < (j - i)) {
+						maxlen = (j - i);
+					}
+				}
+			}
+		}
+		//O(n^2)
+		tmplen = maxlen = 0;
+		for(int i = 0 ; i < s1.length();i++) {
+			tmplen = strDFS(i,0,idxArr,s1.length(),s2.length(),0);
+			if(maxlen < tmplen)
+				maxlen = tmplen;
+		}
+
+		return maxlen;
+	}
     public static int pivotIndex(int[] nums) {
     	
     	int sum = 0;
