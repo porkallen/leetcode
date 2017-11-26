@@ -116,6 +116,7 @@ public class Solution {
         return index;
     }
     public String countOfAtoms(String formula) {
+    	/*Not completed yet*/
     	int len = formula.length();
     	int head,tail,upperCaseIdx;
     	head = tail = upperCaseIdx = 0;

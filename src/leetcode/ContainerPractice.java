@@ -60,6 +60,9 @@ public class ContainerPractice {
 		//cloneList.add
 		List<String> alist = new ArrayList<String>();
 		alist.addAll(cloneList);
+
+        /* Collections.sort method is sorting the
+        elements of ArrayList in descending order. */
 		Collections.sort(alist,Collections.reverseOrder());
 		
 		if(alist.contains("Hi")) {
