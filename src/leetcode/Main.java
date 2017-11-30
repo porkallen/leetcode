@@ -5,6 +5,9 @@ public class Main {
     		String s1,s2;
     		s1 = "Hello World!";
     		s2 = "Fuck Hello";
-    		System.out.println(Solution.longestStringCompare(s1, s2));
+    		//System.out.println(Solution.longestStringCompare(s1, s2));
+    		//BackTrackingPractice.stringOrder("ABCD".toCharArray());
+    		BackTrackingPractice.numSelect(10);
+
     }
 }
