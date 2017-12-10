@@ -1,6 +1,35 @@
 package leetcode;
 
+class TreeNode{
+	public int idx;
+	public int value;
+	public TreeNode left;
+	public TreeNode right;
+	TreeNode(int idx, int value,TreeNode left, TreeNode right){
+		this.idx = idx;
+		this.value = value;
+		this.left = left;
+		this.right = right;
+	}
+}
+
 public class BinaryTree {
+	TreeNode root;
+	BinaryTree(int idx, int value){
+		root = new TreeNode(idx,value,null,null);
+	}
+	void insert(int idx, int value) {
+		
+	}
+	void treeTravase(TreeNode node,int idx, int value) {
+		if(node != null) {
+			if(value <= )
+		}
+		
+	}
+	boolean delete(int idx, int value) {
+		return false;
+	}
 
 }
 
