@@ -1,49 +1,95 @@
 package leetcode;
 
-class TreeNode{
+public class BinaryTree {
 	public int idx;
 	public int value;
-	public TreeNode left;
-	public TreeNode right;
-	TreeNode(int idx, int value,TreeNode left, TreeNode right){
-		this.idx = idx;
+	public BinaryTree left;
+	public BinaryTree right;
+	static int g_cnt = 0;
+	BinaryTree(int value){
+		this.idx = g_cnt++;
 		this.value = value;
-		this.left = left;
-		this.right = right;
+		this.left = null;
+		this.right = null;
 	}
-}
-
-public class BinaryTree {
-	TreeNode root;
-	BinaryTree(int idx, int value){
-		root = new TreeNode(idx,value,null,null);
-	}
-	void insert(int idx, int value) {
-		
-	}
-	void treeTravase(TreeNode node,int idx, int value) {
-		if(node != null) {
-			if(value <= )
+	void addNode(int value) {
+		BinaryTree node = this;
+		while(node != null) {
+			if(node.value > value) {
+				if(node.left != null) {
+					node = node.left;
+				}
+				else {
+					BinaryTree newNode = new BinaryTree(value);
+					node.left = newNode;
+					return;
+				}
+			}
+			else {
+				if(node.right != null) {
+					node = node.right;
+				}
+				else {
+					BinaryTree newNode = new BinaryTree(value);
+					node.right = newNode;
+					return;
+				}
+			}
 		}
-		
 	}
-	boolean delete(int idx, int value) {
-		return false;
+	BinaryTree findNode(int key) {
+		BinaryTree node = this;
+		while(node != null) {
+			if(node.value > key) {
+				node = node.left;
+			}
+			else if(node.value < key){
+				node = node.right;
+			}
+			else {
+				return node;
+			}
+		}
+		return null;
 	}
+	void traverseInOrder(BinaryTree node) {//left,root,right
+		if(node == null) {
+			return;
+		}
+		traverseInOrder(node.left);
+		System.out.printf("(%d) value:%d \n",node.idx,node.value);
+		traverseInOrder(node.right);
+	}
+	void traversePreOrder(BinaryTree node) {//root,left,right
+		if(node == null) {
+			return;
+		}
+		System.out.printf("(%d) value:%d \n",node.idx,node.value);
+		traversePreOrder(node.left);
+		traversePreOrder(node.right);
+	}
+	void traversePostOrder(BinaryTree node) {//left,right,root
+		if(node == null) {
+			return;
+		}
+		traversePostOrder(node.left);
+		traversePostOrder(node.right);
+		System.out.printf("(%d) value:%d \n",node.idx,node.value);
 
+	}
+	boolean sameTree(BinaryTree root1, BinaryTree root2){
+		boolean left,right;
+		if(root1 == null && root2 == null)
+			return true;
+		if(root1 != null ^ root2 != null)
+			return false;
+		if(root1.value == root2.value) {
+			left = sameTree(root1.left,root2.left);
+			right = sameTree(root1.right,root2.right);
+			return (left && right);
+		}
+		else {
+			return false;
+		}
+	}
 }
-
-//#include <stdio.h>
-//2 int sameTree(Node root1, Node root2){
-//3 //base case :both are empty
-//4 if(root1==NULL && root2==NULL )
-//5    return 1;
-//6
-//7 if(root1 == root2 ) {
-//8     //subtrees
-//9     Node *left=sameTree(root1.left,root2.left);
-//10     Node *right=sameTree(root1.right,root2.right);
-//11     return (left && right);
-//12 }//end if
-//13 else{
-//14     return 0;
