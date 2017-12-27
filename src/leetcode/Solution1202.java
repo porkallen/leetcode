@@ -3,7 +3,13 @@ package leetcode;
 import java.util.Arrays;
 import java.util.List;
 
-public class Solution {
+class ListNode {
+    int val;
+    ListNode next;
+    ListNode(int x) { val = x; }
+}
+
+public class Solution1202 {
 	public static int strDFS(int row,int col, int[][] arr,int rowLen,int colLen, int nowLen) {
 		int sum = nowLen;
 		System.out.printf("sum :%d \n",sum);
