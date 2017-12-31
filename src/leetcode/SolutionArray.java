@@ -20,8 +20,19 @@ public class SolutionArray {
 	public int[] result;
 	HashSet<List<Integer>> hs = new HashSet<List<Integer>>();
 	SolutionArray(){//abcabcbb
-		System.out.printf("ret Str len:%d \n",lengthOfLongestSubstring("abcabcbb"));
+		int[] cost = {0,0,0,1};
+		System.out.println("result: "+ minCostClimbingStairs(cost));
 	}
+    public int minCostClimbingStairs(int[] cost) {
+    		int sumStep[] = new int[cost.length+1];
+    		sumStep[0] = cost[0];
+    		sumStep[1] = cost[1];
+    		for(int i = 2; i < cost.length; i++) {
+    			sumStep[i] += Math.min(sumStep[i-1]+cost[i], sumStep[i-2]+cost[i]);
+    			System.out.printf("i:%d /%d\n",i,sumStep[i]);
+    		}
+    		return sumStep[cost.length-1]<=sumStep[cost.length-2]?sumStep[cost.length-1]:sumStep[cost.length-2];
+    }
     public int lengthOfLongestSubstring(String s) {
     		if(s.length() == 0)
     			return 0;
