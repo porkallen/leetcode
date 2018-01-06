@@ -20,9 +20,45 @@ public class SolutionArray {
 	public int[] result;
 	HashSet<List<Integer>> hs = new HashSet<List<Integer>>();
 	SolutionArray(){//abcabcbb
-		int[] cost = {0,0,0,1};
-		System.out.println("result: "+ minCostClimbingStairs(cost));
+		int bits[] = {1,1,1,1};
+		System.out.printf("result:%s \n", isOneBitCharacter(bits)==true?"True":"False");
 	}
+    public boolean isOneBitCharacter(int[] bits) {
+        //717
+    		int acc = -1;
+    		for(int i = 0; i<bits.length; i++) {
+    			System.out.printf("idx:%d \n", i);
+    			if(bits[i] == 0) {
+    				if(i == bits.length - 1)
+    					return true;
+    			}
+    			else {
+    				if(i < bits.length - 1) {
+    					i+=1;
+    				}
+    				else {
+    					return false;
+    				}
+    			}
+    		}
+    		return false;
+    }
+	public int dominantIndex(int[] nums) {
+		//748
+		int maxNumIdx = -1;
+		int maxNum = -1;
+		for(int i = 0; i<nums.length; i++) {
+			if(maxNum < nums[i]) {
+				maxNumIdx = i;
+				maxNum = nums[i];
+			}
+		}
+		for(int i = 0; i<nums.length; i++) {
+			if((maxNum < 2*nums[i]) && (i != maxNumIdx))
+				return (-1);
+		}
+		return maxNumIdx;
+    }
     public int minCostClimbingStairs(int[] cost) {
     		int sumStep[] = new int[cost.length+1];
     		sumStep[0] = cost[0];
