@@ -12,7 +12,7 @@ import javax.swing.event.ListSelectionEvent;
 
 public class Main {
 	public static void main(String[] args) {
-		SolutionString s = new SolutionString();
-
+		//SolutionString s = new SolutionString();
+		SolutionTree s = new SolutionTree();
     }
 }

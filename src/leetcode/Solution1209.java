@@ -16,8 +16,6 @@ class TreeNode{
 	public TreeNode right;
 	public TreeNode(int val) {
 		this.val = val;
-		this.left = null;
-		this.right = null;
 	}
 }
 public class Solution1209 {
@@ -28,9 +26,9 @@ public class Solution1209 {
 		int ret = networkDelayTime(times,n,k);
 		System.out.println("ret:"+Integer.toString(ret));
 	}
-    public int findClosestLeaf(TreeNode root, int k) {
-    	TreeNode node = root;
-    	TreeNode nodeParent = node;
+    public int findClosestLeaf(SolutionTreeNode root, int k) {
+    	SolutionTreeNode node = root;
+    	SolutionTreeNode nodeParent = node;
     	boolean isLift = false; 
     	while(true) {
     		if(node == null)

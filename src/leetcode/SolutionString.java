@@ -7,18 +7,61 @@ import java.util.List;
 
 public class SolutionString {
 	SolutionString(){
-		System.out.println("result: "+myAtoi("1234566770"));
+		String[] strs = {"c","cc","ccc"};
+		System.out.println("result: "+longestCommonPrefix(strs));
 	}
-    public int myAtoi(String str) {
-        char chrArr[] = str.toCharArray();
-        int ret = 0;
-        int digit = 1;
-        for(int i = str.length()-1; i >= 0; i--) {
-    			System.out.printf("result: %d \n",str.charAt(i) - '0');
-        		ret += (str.charAt(i) - '0')*digit;
-        		digit*=10;
+    public String longestCommonPrefix(String[] strs) {//14
+    		if(strs.length == 0 || strs == null)
+    			return "";
+    		String prefixStr = strs[0];
+    		int prefixLen = prefixStr.length();
+    		for(int i = 1; i < strs.length; i++) {
+    			while(strs[i].indexOf(prefixStr) != 0) {
+    				prefixStr = prefixStr.substring(0, --prefixLen);
+    			}
+    		}
+    		if(prefixStr.length() == 0)
+    			return "";
+        return prefixStr;
+    }
+    public int myAtoi(String str) {//8
+        long ret = 0;//key point
+        int idx = 0;
+        int sign = 1;
+        int err = -1;
+        
+        if(str.length() == 0)
+        		return 0;
+        for(int i = 0; i < str.length(); i++) {
+        		if(str.charAt(idx) == ' ')
+        			idx++;
         }
-        return ret;
+        if(err > 0)
+        		return 0;
+        if(str.charAt(idx) =='+') {
+        		sign = 1;
+        		idx++;
+        }
+        else if(str.charAt(idx) =='-') {
+        		sign = -1;
+        		idx++;
+        }
+        
+        for(int i = idx; i < str.length(); i++) {
+        		int digit = str.charAt(i) - '0';
+    			if(digit < 10 && digit >=0) {
+    				ret = ret*10+digit;
+        			System.out.printf("digit: %d ret:%d(%s) %d %d\n",digit,ret,Long.toBinaryString(ret),Integer.MAX_VALUE,Integer.MIN_VALUE);
+        			if (sign == -1 && (-1) * ret < Integer.MIN_VALUE)
+        				return Integer.MIN_VALUE;
+        			if (sign == 1 && ret > Integer.MAX_VALUE)
+        				return Integer.MAX_VALUE;
+    			}
+    			else {
+    				return (int)ret*sign;
+    			}
+        }
+        return (int)ret*sign;
     }
     public String convert(String s, int numRows) {
         //6
