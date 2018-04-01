@@ -7,8 +7,69 @@ import java.util.List;
 
 public class SolutionString {
 	SolutionString(){
-		String[] strs = {"c","cc","ccc"};
-		System.out.println("result: "+longestCommonPrefix(strs));
+		String s = "25525511135";
+		restoreIpAddresses(s);
+	}
+	
+	public void restoreIpAddressesBackTracking(String src,String out, List<String> retStrList,int cnt, int idx){
+		if(cnt == 4 && idx == src.length()) {
+			System.out.printf("result:%s\n",out);
+			retStrList.add(out);
+		}
+		if(cnt > 4 )
+			return;
+		for(int i = 1; i< 4; i++) {
+			if (idx + i > src.length()) break;
+			String s = src.substring(idx, idx+i);
+			//System.out.printf("s:%s (%d)\n",s,cnt);
+	        if ((s.startsWith("0") && s.length()>1) || (i==3 && Integer.parseInt(s) >= 256)) continue;
+			restoreIpAddressesBackTracking(src,out+s+(cnt==3?"":'.'),retStrList,cnt+1,idx+i);
+		}
+		
+	}
+    public List<String> restoreIpAddresses(String s) {//93
+    	List<String> retStrList = new ArrayList<String>();
+    	if(s == null)
+    		return retStrList;
+    	restoreIpAddressesBackTracking(s,"",retStrList,0,0);
+    	return retStrList;
+    	
+        
+    }
+    public String addBinary(String a, String b) {//67
+    	if(a == null)
+    		return b;
+    	if(b == null)
+    		return a;
+    	if(a == null && b == null)
+    		return null;
+    	StringBuilder s = new StringBuilder();
+    	int i = a.length() - 1;
+    	int j = b.length() - 1;
+    	int sum = 0;
+    	while(i >= 0 || j >= 0){
+    		if(i >= 0 ) sum += a.charAt(i--) - '0';
+    		if(j >= 0 ) sum += b.charAt(j--) - '0';
+    		System.out.printf("num of sum:%d \n",sum);
+    		s.insert(0,Integer.toString(sum%2));
+    		System.out.printf("-->%s \n",s);
+
+    		sum = sum/2;
+    	}
+    	if(sum != 0)
+    		s.insert(0,"1");
+    	return s.toString();
+    }
+	public int lengthOfLastWord(String s) { // 58
+		if(s == null)
+			return 0;
+		if(s.length() == 0)
+			return 0;
+		String tmp = s;
+		String retStrArr[] = tmp.split(" ");
+		if(retStrArr.length == 0)
+			return 0;
+		return retStrArr[retStrArr.length-1].length();
 	}
     public String longestCommonPrefix(String[] strs) {//14
     		if(strs.length == 0 || strs == null)

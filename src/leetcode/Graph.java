@@ -38,7 +38,6 @@ public class Graph {
 		boolean visited[] = new boolean[this.vCnt+1];
 		Arrays.fill(visited, false);
 		Queue<Integer> q = new LinkedList<>();
-
 		q.add(start);
 		visited[start] = true;
 		while(!q.isEmpty()) {
