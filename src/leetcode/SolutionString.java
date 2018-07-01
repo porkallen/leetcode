@@ -3,14 +3,78 @@ package leetcode;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Stack;
 
 public class SolutionString {
 	SolutionString(){
-		String s = "25525511135";
-		restoreIpAddresses(s);
+		String s = "()[]{}";
+		System.out.printf("ret:%s \n",isValid(s)?"T":"S");
 	}
-	
+    public boolean isValid(String s) {//20
+    	Stack<Character> st = new Stack();
+    	for(int i = 0; i < s.length(); i++) {
+    		char c = s.charAt(i);
+    		char tmp;
+    		switch(c) {
+    		case '{':
+    			st.push(c);
+    			break;
+    		case '[':
+    			st.push(c);
+    			break;
+    		case '(':
+    			st.push(c);
+    			break;
+    		case '}':
+    			if(st.isEmpty())
+    				return false;
+    			else {
+    				tmp = st.pop();
+    				if(tmp != '{')
+    					return false;
+    			}
+    			break;
+    		case ']':
+    			if(st.isEmpty())
+    				return false;
+    			else {
+    				tmp = st.pop();
+    				if(tmp != '[')
+    					return false;
+    			}
+    			break;
+    		case ')':
+    			if(st.isEmpty())
+    				return false;
+    			else {
+    				tmp = st.pop();
+    				if(tmp != '(')
+    					return false;
+    			}
+    			break;
+
+    		default:
+    			break;
+    		}
+    	}
+    	if(!st.isEmpty())
+    		return false;
+    	else
+    		return true;
+        
+    }
+    public int romanToInt(String s) {//13
+    	int retInt = 0;
+    	int pow = 0;
+    	if(s == null)
+    		return 0;
+    	for(int i = s.length()-1; i >= 0; i--) {
+    		retInt += (int)(s.charAt(i) - '0') *Math.pow(10, pow++);
+    	}
+    	return retInt;
+    }
 	public void restoreIpAddressesBackTracking(String src,String out, List<String> retStrList,int cnt, int idx){
 		if(cnt == 4 && idx == src.length()) {
 			System.out.printf("result:%s\n",out);
