@@ -17,7 +17,7 @@ public class Main {
 		System.out.printf("%s\n",ret);
 	}
 	public static void main(String[] args) {
-		SolutionEasy s = new SolutionEasy();
+		Solution0706 s = new Solution0706();
 		//Solution0630 s = new Solution0630();
 		//arrayFormat("[[0,0],[0,1],[0,2],[0,7],[1,2],[1,3],[1,9],[2,3],[2,5],[2,7],[2,8],[3,2],[3,5],[3,7],[4,2],[4,3],[4,5],[4,7],[5,1],[5,4],[5,8],[5,9],[7,2],[7,5],[7,7],[7,8],[8,5],[8,8],[9,0],[9,1],[9,2],[9,8]]");
 		//Solution0113 s = new Solution0113();
