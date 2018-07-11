@@ -1,5 +1,6 @@
 package leetcode;
 import java.text.Collator;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
@@ -20,10 +21,11 @@ class Interval {
      }
  }
 public class Solution0706 {
+    private int[] f;
 	Solution0706(){
 		//Given list = [[1,2,3],[3,9,7],[4,5,10]], return 2.
 		//Given list = [[1],[1,2,3],[4],[8,7,4,5]], return 2
-		int[][] sets = {{1,2,3},{1,9,7},{4,5,10},{11,12,13}};
+		int[][] sets = {{1,2,3},{4,5,6},{3,4},{6,9,10}};
 		System.out.printf("test:%d \n", setUnion(sets));
 	}
     public int getColumn(int[][] arr) {
@@ -42,33 +44,47 @@ public class Solution0706 {
         return end;
     }
     public int setUnion(int[][] sets) {
-    	Integer[][] tempSets = new Integer[sets.length][100];
-    	for (int i = 0; i < sets.length; i++) {
-    		for(int j = 0; j < sets[i].length; j++)
-    			tempSets[i][j] = Integer.valueOf(sets[i][j]);
-    	}
-    	Map<Integer,HashSet<Integer>> m = new HashMap<Integer,HashSet<Integer>>();
-    	HashSet<Integer> s = new HashSet<Integer>();
-    	for(int i = 0; i < sets.length; i++) {
-    		s = new HashSet<Integer>(Arrays.asList(tempSets[i]));
-    		boolean isContain = false;
-    		for(int j = 0; j < i; j++) {
-    			for(int k = 0; k < sets[i].length; k++) {
-        			if(m.get(j) != null && m.get(j).contains(sets[i][k])) {
-        				HashSet<Integer> tmp = m.get(j);
-        				tmp.addAll(s);
-        				m.put(j, tmp);
-        				isContain = true;
-        				break;
-        			}
-    			}
-    			if(isContain == true)
-    				break;
-    		}
-			if(!isContain)
-        		m.put(i, s);
-    	}
-    	return m.size();
+        int len = sets.length;
+        f = new int[len];
+        for (int i = 0; i < len; i++) {
+            f[i] = i;
+        }
+        
+        int[] eleF = new int[100001];
+        Arrays.fill(eleF, -1);
+        
+        for (int i = 0; i < len; i++) {
+            for (int ele: sets[i]) {
+                if (eleF[ele] == -1) {
+                    eleF[ele] = find(i);
+                } else {
+                    int fa = find(eleF[ele]);
+                    int fb = find(i);
+                    if (fa != fb) {
+                        f[fa] = fb;
+                    }
+                }
+            }
+            for (int j = 0; j < len; j++) {
+                System.out.printf("%d round: idx:%d val:%d \n",i,j,f[j]);
+            }
+        }
+        
+        int ans = 0;
+        for (int i = 0; i < len; i++) {
+            if (f[i] == i) {
+                ans ++;
+            }
+        }
+        return ans;
+    }
+    
+    private int find(int x) {
+        if (f[x] == x) {
+            return x;
+        }
+        
+        return f[x] = find(f[x]);
     }
     public List<Interval> timeIntersection(List<Interval> seqA, List<Interval> seqB) {
         List<Interval> ret = new LinkedList<Interval>();
