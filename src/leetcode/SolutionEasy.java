@@ -2,7 +2,11 @@ package leetcode;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 public class SolutionEasy {
 	SolutionEasy(){
@@ -23,8 +27,55 @@ public class SolutionEasy {
 		int[] num = {1,2,2,3,3,3,4,4};
 		//System.out.printf("%d \n",removeDuplicates(num));
 		//System.out.printf("%d \n",removeElement(num,2));
-		System.out.printf("result:%d \n",romanToInt("MCDLXXVI"));
+		//System.out.printf("result:%d \n",romanToInt("MCDLXXVI"));
 	}
+	public boolean dfs(TreeNode cur, int curSum, int sum) {
+		if(cur == null) {
+			return false;
+		}
+		System.out.printf("val:%d cursum:%d \n",cur.val,curSum);
+		if((curSum + cur.val) == sum && cur.left == null && cur.right == null) {
+			return true;
+		}
+		return dfs(cur.left, curSum+cur.val, sum) | dfs(cur.right, curSum+cur.val, sum);
+	}
+	public void dfs2(TreeNode cur, int curSum, List<List<Integer>> ret, List<Integer> curSet, int sum) {
+		List<Integer> tmpSet = new LinkedList<Integer>(curSet);
+		if(cur == null) {
+			return;
+		}
+		tmpSet.add(cur.val);
+		if((curSum + cur.val) == sum && cur.left == null && cur.right == null) {
+			ret.add(tmpSet);
+			return;
+		}
+		dfs2(cur.left,curSum+cur.val,ret,tmpSet,sum);
+		dfs2(cur.right, curSum+cur.val,ret,tmpSet,sum);
+	}
+    public List<List<Integer>> pathSum(TreeNode root, int sum) {
+    	List<List<Integer>> ret = new LinkedList<List<Integer>>();
+    	List<Integer> curSet = new LinkedList<Integer>();
+    	if(root == null)
+    		return ret;
+    	if(root.left == null && root.right == null) {
+    		if(root.val == sum) {
+    			curSet.add(root.val);
+    			ret.add(curSet);
+    		}
+    		return ret;
+    	}
+    	dfs2(root,0,ret,curSet,sum);
+    	return ret;
+    }
+    public boolean hasPathSum(TreeNode root, int sum) {
+    	boolean ret = false;
+    	if(root == null)
+    		return false;
+    	if(root.left == null && root.right == null) {
+    		return (root.val == sum)? true : false;
+    	}
+    	return ret | dfs(root,0,sum);
+    }
     public int searchInsert(int[] nums, int target) {//35
     	int idx = 0;
     	if(nums.length == 0)
