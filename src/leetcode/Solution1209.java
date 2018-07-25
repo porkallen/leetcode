@@ -10,14 +10,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Queue;
 
-class TreeNode{
-	public int val;
-	public TreeNode left;
-	public TreeNode right;
-	public TreeNode(int val) {
-		this.val = val;
-	}
-}
+
 public class Solution1209 {
 	Solution1209(){
 		int[][] times = {{1,2,1}};
@@ -26,9 +19,9 @@ public class Solution1209 {
 		int ret = networkDelayTime(times,n,k);
 		System.out.println("ret:"+Integer.toString(ret));
 	}
-    public int findClosestLeaf(SolutionTreeNode root, int k) {
-    	SolutionTreeNode node = root;
-    	SolutionTreeNode nodeParent = node;
+    public int findClosestLeaf(TreeNode root, int k) {
+    	TreeNode node = root;
+    	TreeNode nodeParent = node;
     	boolean isLift = false; 
     	while(true) {
     		if(node == null)

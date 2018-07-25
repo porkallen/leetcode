@@ -24,11 +24,88 @@ public class SolutionEasy {
 		temp.next = new ListNode(4); 
 		mergeTwoLists(l1,l2);
 		*/
-		int[] num = {1,2,2,3,3,3,4,4};
+		int[] num = {8,9,9,9};
 		//System.out.printf("%d \n",removeDuplicates(num));
 		//System.out.printf("%d \n",removeElement(num,2));
 		//System.out.printf("result:%d \n",romanToInt("MCDLXXVI"));
+		//plusOne(num);
+	//	System.out.printf("%d \n",mySqrt(2147395599));
+		System.out.printf("%d \n",climbStairs(4));
+    	StringBuilder s = new StringBuilder();
+    	s.append("<p>Hello</p>");
+    	String s1 = s.toString().replace("<p>","");    
+    	String s2 = s1.toString().replaceAll("</p>",""); 	
+    	System.out.printf("%s len:%d\n",s2,s2.length());
+
+
 	}
+    public int maxSubArray(int[] nums) {//53
+    	int sum,ret;
+    	sum = 0;
+    	ret = Integer.MIN_VALUE;
+        for(int i: nums) {
+        	sum = Math.max(sum, sum + i);
+        	ret = Math.max(sum, ret);
+        }
+        return ret;
+    }
+    public int climbStairs(int n) { 
+    	int ret = 0;
+    	if(n <= 2 )
+    		return n;
+    	int[] dp = new int[n+1];
+    	dp[0] = 0;
+    	dp[1] = 1;
+    	dp[2] = 2;
+    	for(int i = 3 ; i <= n ; i++) {
+    		dp[i] = dp[i - 1] + dp[i - 2];
+    	}
+    	return dp[n];
+    }
+    public int mySqrt(int x) {
+    	int ret = 0;
+    	if(x <= 1)
+    		return x;
+    	if(x <= 3)
+    		return 1;
+    	if(x <= 8)
+    		return 2;
+    	
+    	for(int i = 2 ; i < x; i*=2) {
+    		if(i == x / i)
+    			return i;
+    		if(i > x/i) {
+    			for(int j = i/2; j < i; j++) {
+    				if(j > x/j)
+    					return j - 1;
+    			}
+    		}
+    	}
+        return ret;
+    }
+    public int[] plusOne(int[] digits) {
+    	int[] ret = new int[digits.length + 1];
+    	ret[0] = 1;
+    	int retNum = 0;
+    	int pow = digits.length - 1;
+    	if(digits.length == 1 && digits[0] < 9) {
+    		digits[0]++;
+    		return digits;
+    	}
+    	for(int i = digits.length - 1; i >= 0 ; i--) {
+    		if(digits[i] + 1 <= 9) {
+    			digits[i]++;
+    			return digits;
+    		}
+    		else {
+    			digits[i] = 0;
+    			if(i == 0) {
+    				return ret;
+    			}
+    		} 		
+    	}
+    	return ret;
+    }
 	public boolean dfs(TreeNode cur, int curSum, int sum) {
 		if(cur == null) {
 			return false;

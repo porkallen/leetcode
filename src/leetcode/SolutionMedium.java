@@ -1,5 +1,8 @@
 package leetcode;
 
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.Stack;
 
 public class SolutionMedium {
@@ -10,6 +13,26 @@ public class SolutionMedium {
 		System.out.printf("%d %d %d \n",ret.val,ret.left.val,ret.right.val);
 		
 	}
+    public void setZeroes(int[][] matrix) {
+    	Set<Integer> s = new HashSet<Integer>();
+    	for(int i = 0; i < matrix.length; i++) {
+        	boolean ind = false;
+    		for(int j = 0; j < matrix[0].length; j++) {
+    			if(matrix[i][j] == 0) {
+    				ind = true;
+    				s.add(j);
+    			}
+    		}
+    		if(ind == true) {
+    			Arrays.fill(matrix[i], 0);
+    		}
+    	}
+    	for(int j : s) {
+        	for(int i = 0; i < matrix.length; i++) {
+        		matrix[i][j] = 0;
+        	}
+    	}
+    }
 	public TreeNode buildTreeRecursive(int[] preorder,int preIdx,int rootIdx,int[] inorder,int left, int right){
 	    if (preIdx > preorder.length - 1 || left > right) {
 	        return null;
