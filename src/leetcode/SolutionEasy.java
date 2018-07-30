@@ -39,6 +39,48 @@ public class SolutionEasy {
 
 
 	}
+	public ArrayList<Integer> isSymmetricTreeBuild(TreeNode node, ArrayList<Integer> l, boolean isLeft) {
+		if(node == null) {
+            l.add(Integer.MIN_VALUE);
+			return null;
+		}
+        if(node.left == null && node.right == null) {
+            l.add(node.val);
+		}
+        else {
+    		if(isLeft) {
+    			l.add(node.val);
+    			isSymmetricTreeBuild(node.left,l,isLeft);
+    			//System.out.printf("Left: %d \n",node.val);
+    			isSymmetricTreeBuild(node.right,l,isLeft);
+
+    		}
+    		else {
+    			l.add(node.val);
+                isSymmetricTreeBuild(node.right,l,isLeft);
+    			//System.out.printf("Right: %d \n",node.val);
+    			isSymmetricTreeBuild(node.left,l,isLeft);
+    		}
+        }
+		return l;
+	}
+    public boolean isSymmetric(TreeNode root) {
+    	ArrayList<Integer> l,r;
+    	l = new ArrayList<Integer>();
+    	r = new ArrayList<Integer>();
+    	if(root == null)
+    		return true;
+    	if(root.left == null && root.right == null)
+    		return true;
+    	
+    	l = isSymmetricTreeBuild(root.left,l,true);
+    	r = isSymmetricTreeBuild(root.right,r,false);
+
+    	if(l == null || r == null)
+    		return false;
+		System.out.printf("L: %s R: %s \n",l.toString(),r.toString());
+    	return l.equals(r);
+    }
     public int maxSubArray(int[] nums) {//53
     	int sum,ret;
     	sum = 0;

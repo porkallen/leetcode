@@ -96,7 +96,6 @@ public class Solution0714 {
     	for(int i = 0; i < B.length; i++) {
     		bList.add(new Pair <Integer,Integer> (B[i],i));
     	}
-    	Collections.sort(aList);
     	Collections.sort(bList, new Comparator<Pair<Integer, Integer>>() {
     	    @Override
     	    public int compare(final Pair<Integer, Integer> o1, final Pair<Integer, Integer> o2) {

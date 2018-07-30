@@ -34,12 +34,13 @@ public class Solution0713 {
 
 	}
     public int longestPath(int n, int[] starts, int[] ends, int[] lens) {
-    	int ret = 0;
+    	/*int ret = 0;
     	MyGraph g = new MyGraph(starts[0]);
     	for(int i = 0; i < starts.length; i++) {
     		g.add
     	}
-    	return ret;
+    	return ret;*/
+    	return 0;
     }
     public int askForCoolingTime(int[] arr, int n) {
     	int ret = 0;

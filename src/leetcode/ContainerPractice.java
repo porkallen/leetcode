@@ -25,14 +25,41 @@ public class ContainerPractice {
 	final static int COUNT = 10;
 	public static Map<Integer, String> myMap;
 	String[] studentDatabase;
+	class SortbyKey implements Comparator<MyPair<Integer,String>>
+	{
+	    // Used for sorting in ascending order of
+	    // roll number
+	    public int compare(MyPair<Integer,String> a, MyPair<Integer,String> b)
+	    {
+	        return a.getKey().compareTo(b.getKey());
+	    }
+	}
 	ContainerPractice(){
 		myMap = new HashMap<Integer, String>();
 		for(int i = 0 ; i < COUNT; i++) {
 			myMap.put(i,"I am Value: "+Integer.toString(i));
 		}
 		studentDatabase = new String[]{"Ryan","Alfred","Beth"};
+		sortToTest();
 	}
-	  private static HashMap sortByValues(HashMap map) { 
+    public int sortToTest() {
+        ArrayList<MyPair<Integer,String>> ar = new ArrayList<MyPair<Integer,String>>();
+        ar.add(new MyPair<Integer,String>(111, "bbbb"));
+        ar.add(new MyPair<Integer,String>(131, "aaaa"));
+        ar.add(new MyPair<Integer,String>(121, "cccc"));
+        
+    	System.out.printf("Before Sorted\n");
+        for(MyPair<Integer,String> p : ar)
+        	System.out.printf("K:%d V:%s \n",p.getKey(),p.getValue());
+        
+        Collections.sort(ar, new SortbyKey());
+        
+    	System.out.printf("After Sorted\n");
+        for(MyPair<Integer,String> p : ar)
+        	System.out.printf("K:%d V:%s \n",p.getKey(),p.getValue());
+    	return 0;
+    }
+	private static HashMap sortByValues(HashMap map) { 
 	       List list = new LinkedList(map.entrySet());
 	       // Defined Custom Comparator here
 	       Collections.sort(list, new Comparator() {
