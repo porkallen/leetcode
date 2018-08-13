@@ -1,6 +1,7 @@
 package leetcode;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
@@ -39,6 +40,25 @@ public class SolutionEasy {
 
 
 	}
+    public String longestWord(String[] words) {
+    	String ret = "";
+    	int maxLen = 0;
+    	if(words.length == 0)
+    		return ret.toString();
+    	Set s = new HashSet(Arrays.asList(words));
+    	for(String w : words) {
+    		int i = maxLen;
+    		for(; i < w.length(); i++) {
+    			if(!s.contains(w.substring(0, i)))
+    				break;
+    		}
+    		if(ret.length() == 0 || (w.substring(0,i).length() >= ret.length() && w.compareTo(ret) < 0)) {
+    			ret = w.substring(0,i);
+    			maxLen = ret.length();
+    		}
+    	}
+    	return ret;
+    }
 	public ArrayList<Integer> isSymmetricTreeBuild(TreeNode node, ArrayList<Integer> l, boolean isLeft) {
 		if(node == null) {
             l.add(Integer.MIN_VALUE);
