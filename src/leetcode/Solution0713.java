@@ -6,22 +6,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
-class MyGraph {
-	int vCnt;
-	LinkedList<Integer> adj[];
-	MyGraph(int vCnt){
-        this.vCnt= vCnt;
-        adj = new LinkedList[this.vCnt];
-        for (int i = 0; i < this.vCnt; i++) {
-        		adj[i] = new LinkedList();		
-        }
-	}
-	public void add(int v, int adjV){
-		if(v < this.vCnt) {
-			adj[v].add(adjV);
-		}
-	}
-}
 
 public class Solution0713 {
 	Solution0713(){
