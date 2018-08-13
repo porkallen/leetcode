@@ -15,11 +15,10 @@ import java.util.stream.Collectors;
 public class Solution0803 {
 	Solution0803(){
 		//System.out.printf("ret: %d \n",coinProblem(100,29));
-		//int[] dp = {2,4,2,1,2,1};
-		int[] dp = {1,1,1,1};
-		int n = 4;
+		int[] dp = {2,4,2,1,2,1};
+		//int[] dp = {3,2,1};
+		int n = 6;
 		System.out.printf("ret: %d \n",Solve(n,dp));
-		System.out.printf("ret1: %d \n",Solve1(n,dp));
 		//int[][] getMaxArrs = {{1,9},{2,8},{3,7},{4,6},{5,5}};
 		//System.out.printf("ret: %d \n",getMax(getMaxArrs));
 
@@ -60,41 +59,37 @@ public class Solution0803 {
     	}
     	return ret;
     }
-    int[] dp1 = new int[1000000+2];
-    public long Solve1(int n, int[] num) {
-        // Write your code here
-        int mod = (int)(1e9 + 7);
-        Arrays.fill(dp1, 0);
-        int res = 0;
-        dp1[1] = 1;
-        dp1[num[0] + 1] = -1;
-        for (int i = 1; i < n; i++) {
-            res = num[i];
-            int L = i + 1, R = Math.min(n + 1, i + num[i] + 1);
-            dp1[L] = (dp1[L] + dp1[L - 1] + res);
-            dp1[R] = (dp1[R] - res);
-
-            System.out.printf("i:%d L:%d R:%d dpL:%d dpR:%d res:%d\n",i,L,R,dp1[L],dp1[R],res);
-        }
-        return dp1[n];
-    }
-    int[] dp = new int[1000000+2];
     public long Solve(int n, int[] num) {
         // Write your code here
-        int mod = (int)(1e9 + 7);
-        Arrays.fill(dp, 0);
-        dp[0] = 1;dp[1] = -1;
-        int res = 0;
+        int[] dp1 = new int[n+2];
+        int MOD = (int)(1e9 + 7);
+        Arrays.fill(dp1, 0);
+        int cur = 1;
+        dp1[0] = 1;
+        dp1[1] = -1;
+        for(int i = 0; i < num.length; i++)
+        	System.out.printf("%d ",num[i]);
+    	System.out.printf("\n\n");
+
+        for(int i = 0; i < dp1.length; i++)
+        	System.out.printf("%d ",i);
+    	System.out.printf("\n");
         for (int i = 0; i < n; i++) {
-            res = (res + dp[i]) % mod;
             int L = i + 1, R = Math.min(n + 1, i + num[i] + 1);
-            dp[L] = (dp[L] + res) % mod;
-            dp[R] = (dp[R] - res) % mod;
-            System.out.printf("i:%d L:%d R:%d dpL:%d dpR:%d res:%d\n",i,L,R,dp[L],dp[R],res);
+            dp1[L] = (dp1[L]  + cur) % MOD;
+            dp1[R] = (dp1[R] - cur) % MOD;
+            cur = (cur + dp1[i+1]) % MOD;
+            for(int a : dp1)
+            	System.out.printf("%d ",a);
+            System.out.printf(" (cur): %d \n", cur);
         }
-        res = (res + dp[n]) % mod;
-        if (res < 0) res += mod;
-        return res;
+        for(int i = 1; i < n+1; i++)
+        	dp1[i] = (dp1[i] + dp1[i-1]) % MOD;
+    	System.out.printf("========Final=======\n");
+        for(int a : dp1)
+        	System.out.printf("%d ",a);
+        System.out.printf(" (cur): %d \n", cur);
+        return dp1[n];
     }
     public int coinProblem(int n, int m) {
     	int[] changes = {100, 50, 20, 10, 5, 2, 1};
