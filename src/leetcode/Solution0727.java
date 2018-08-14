@@ -12,31 +12,70 @@ import java.util.TreeMap;
 
 public class Solution0727 {
 	Solution0727(){
-		String[] tmp = {"F2 Enter 18","F2 Exit 19","F1 Enter 10","F1 Exit 20"};
+		//String[] tmp = {"F2 Enter 18","F2 Exit 19","F1 Enter 10","F1 Exit 20"};
 		//String[] tmp = {"F1 Enter 10","F1 Exit 18","F1 Enter 19","F1 Exit 20"};
-		String[] s = getRuntime(tmp);
-		int[][] test = {{1,1,1},{1,2,1},{1,1,1}};
-		//System.out.printf("%d \n",solve(test));
+		//String[] s = getRuntime(tmp);
+		//int[][] test = {{-1,-3,2},{2,3,4},{-3,7,2}};
+		//int[][] test = {{-1,-1},{-1,-1}};
+		//int[][] test = {{1,1,1},{1,2,1},{1,1,1}};
+		int[][] test = {{-965},{-70},{-548},{422},{160}};
+		System.out.printf("%d \n",solve(test));
 	}
-    public int solve(int[][] arr) {
+    public int solve(int[][] arr) {//1489. The Largest Sum Of The Matrix Boundary Elements
     	int ret = Integer.MIN_VALUE;
     	int[][] dpArrs = new int[arr.length + 1][arr[0].length + 1];
-    	Arrays.fill(dpArrs, 0);
-    	int rowLen = dpArrs.length;
-    	int colLen = dpArrs[0].length; 
-    	
+    	int rowLen = dpArrs.length, colLen = dpArrs[0].length; 
+
+    	for(int[] arrs : dpArrs)
+    		Arrays.fill(arrs, 0);    	
     	//Draw the DP map
     	for(int i = 1; i < rowLen; i++) {
     		for(int j = 1; j < colLen; j++) {
-    			dpArrs[i][j] = dpArrs[i][j - 1] + dpArrs[i - 1][j] - dpArrs[i - 1][j - 1]+ arr[i][j];
+    			dpArrs[i][j] = dpArrs[i][j - 1] + 
+    					dpArrs[i - 1][j] - dpArrs[i - 1][j - 1] + arr[i - 1][j - 1];
     		}
     	}
+    	for(int i = 0; i < rowLen; i++) {
+    		for(int j = 0; j < colLen; j++) {
+    			System.out.printf("%d ",dpArrs[i][j]);
+    		}
+			System.out.printf("\n");
+    	}
+    	for(int i = 0; i < arr.length; i++) {
+    		for(int j = 0; j < arr[0].length; j++) {
+    			ret = Math.max(ret, arr[i][j]);
+    		}
+    	}
+		System.out.printf("(%d)\n",ret);
     	for(int i = 1; i < rowLen; i++) {
     		for(int j = 1; j < colLen; j++) {
-    			if(i >= 3 && j>=3) {
-    				int minusArea = dpArrs[i - 1][j - 1] - dpArrs[i - 3][j] - dpArrs[i][j - 3] + dpArrs[i - 2][j  -2];
-    				ret = Math.max(ret, dpArrs[i][j] - minusArea);
-    			}
+				int rowRange = i - 1;//how many row can reduce
+				int colRange = j - 1;//how many col can reduce
+				for(int k = 0; k <= rowRange; k++) {
+					for(int l = 0; l <= colRange; l++) {
+	    				int curRowLen = i - k;//3
+	    				int curColLen = j - k;//3
+	    				int coreArea = 0;
+	    				int minusArea = 0;
+	    				if(curRowLen >= 3 && curColLen >= 3) {
+	    					int coreRowIdx = i - 1;//2
+	    					int coreColIdx = j - 1;//2
+	    					int coreRowLen = curRowLen - 2;//1: minus broader
+	    					int coreColLen = curColLen - 2;//1: minus broader
+	    					coreArea = dpArrs[coreRowIdx][coreColIdx] - dpArrs[coreRowIdx][coreColIdx - coreColLen] - 
+								dpArrs[coreRowIdx - coreRowLen][coreColIdx] + dpArrs[coreRowIdx - coreRowLen][coreColIdx - coreColLen];
+	    				}
+						
+						/*System.out.printf("(%d,%d)(%d,%d) - core:%d %d %d %d\n",i,j,minusRow,minusCol,dpArrs[i - 1][j - 1],
+								dpArrs[i - 1- minusRow][j - 1],dpArrs[i - 1][j - 1- minusCol],
+								dpArrs[i - 1- minusRow][j - 1- minusCol]);*/
+						
+						minusArea = dpArrs[k][j] + dpArrs[i][l] - dpArrs[k][l];
+						System.out.printf("(%d) core: %d minus:%d (%d,%d)\n",dpArrs[i][j],
+								coreArea,minusArea,k,l);
+	    				ret = Math.max(ret, dpArrs[i][j] - minusArea - coreArea);
+					}
+				}
     		}
     	}
     	return ret;

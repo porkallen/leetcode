@@ -21,6 +21,7 @@ public class Main {
 		System.out.printf("%s\n",ret);
 	}
 	public static void main(String[] args) {
-		Solution0803 s = new Solution0803();
+		Solution0727 s = new Solution0727();
+		//arrayFormat("[\"w\",\"wo\",\"wor\",\"worl\",\"world\"]");
     }
 }

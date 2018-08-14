@@ -11,50 +11,52 @@ import java.util.Set;
 
 public class SolutionEasy {
 	SolutionEasy(){
-		/*
-		ListNode temp;
-		ListNode l1;
-		l1 = temp = new ListNode(1);
-		temp.next = new ListNode(2); 
-		temp = temp.next;
-		temp.next = new ListNode(4); 
-		ListNode l2;
-		l2 = temp = new ListNode(1);
-		temp.next = new ListNode(3); 
-		temp = temp.next;
-		temp.next = new ListNode(4); 
-		mergeTwoLists(l1,l2);
-		*/
-		int[] num = {8,9,9,9};
-		//System.out.printf("%d \n",removeDuplicates(num));
-		//System.out.printf("%d \n",removeElement(num,2));
-		//System.out.printf("result:%d \n",romanToInt("MCDLXXVI"));
-		//plusOne(num);
-	//	System.out.printf("%d \n",mySqrt(2147395599));
-		System.out.printf("%d \n",climbStairs(4));
-    	StringBuilder s = new StringBuilder();
-    	s.append("<p>Hello</p>");
-    	String s1 = s.toString().replace("<p>","");    
-    	String s2 = s1.toString().replaceAll("</p>",""); 	
-    	System.out.printf("%s len:%d\n",s2,s2.length());
-
-
+		int[] a = {1,2,2,1},b = {2,2};
+		intersection(a,b);
 	}
+    public int[] intersection(int[] nums1, int[] nums2) {
+    	Set<Integer> retSet = new HashSet<Integer>();
+    	int[] ret = new int[0];
+    	int retIdx = 0;
+    	if(nums1.length == 0 || nums2.length == 0)
+    		return ret;
+    	
+        Set<Integer> s1 = new HashSet<Integer>(),s2= new HashSet<Integer>();
+        
+        for(int i : nums1)
+        	s1.add(i);
+        for(int i : nums2)
+        	s2.add(i);
+          
+    	for(int i = 0; i < nums2.length; i++) {
+    		if(s1.contains(nums2[i]))
+    			retSet.add(nums2[i]);
+    	}
+        if(retSet.size() == 0)
+        	return ret;
+        ret = new int[retSet.size()];
+        for(int ele : retSet)
+        	ret[retIdx++] = ele;
+        
+        return ret;
+    }
     public String longestWord(String[] words) {
     	String ret = "";
-    	int maxLen = 0;
     	if(words.length == 0)
     		return ret.toString();
-    	Set s = new HashSet(Arrays.asList(words));
+    	Set<String> s = new HashSet<String>(Arrays.asList(words));
     	for(String w : words) {
-    		int i = maxLen;
+    		int i = 1;
     		for(; i < w.length(); i++) {
     			if(!s.contains(w.substring(0, i)))
     				break;
     		}
-    		if(ret.length() == 0 || (w.substring(0,i).length() >= ret.length() && w.compareTo(ret) < 0)) {
-    			ret = w.substring(0,i);
-    			maxLen = ret.length();
+    		//System.out.printf("cur:%s \n", w.substring(0, i));
+    		if(i >= w.length()) {
+        		if(ret.length() == 0 || w.length() > ret.length() ||
+        				(w.length() == ret.length() && w.compareTo(ret) < 0)) {
+        			ret = w;
+        		}
     		}
     	}
     	return ret;
