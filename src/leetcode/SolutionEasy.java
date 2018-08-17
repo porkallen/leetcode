@@ -7,13 +7,107 @@ import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Queue;
 import java.util.Set;
+import java.util.Stack;
 
 public class SolutionEasy {
 	SolutionEasy(){
 		int[] a = {1,2,2,1},b = {2,2};
 		intersection(a,b);
 	}
+    public int[][] floodFill(int[][] image, int sr, int sc, int newColor) {
+        
+    	Queue<MyPair<Integer,Integer>> q = new LinkedList<MyPair<Integer,Integer>>();
+    	int[][] maps = {{1,0},{-1,0},{0,1},{0,-1}};
+    	int xBound = image.length;
+    	int yBound = image[0].length;
+    	int oriColor = image[sr][sc];
+    	if(oriColor == newColor)
+    		return image;
+    	image[sr][sc] = newColor;
+    	q.add(new MyPair(sr,sc));
+    	while(!q.isEmpty()) {
+    		MyPair<Integer,Integer> curNode = q.poll();
+    		for(int[] map : maps) {
+    			int updatedX = curNode.key + map[0], updatedY = curNode.value + map[1];
+    			if(updatedX >= 0 && updatedX < xBound) {
+    				if(updatedY >= 0 && updatedY < yBound) {
+    					if(image[updatedX][updatedY] == oriColor) {
+    						image[updatedX][updatedY] = newColor;
+    						q.add(new MyPair<Integer,Integer>(updatedX,updatedY));
+    					}
+    				}
+    			}
+    		}
+    	}
+    	return image;
+    }
+    public List<Integer> selfDividingNumbers(int left, int right) {//728
+    	List<Integer> l = new LinkedList<Integer>();
+        for(int i = left; i <= right; i++) {
+        	String s = Integer.toString(i);
+        	boolean isPickup = true;
+        	for(char c: s.toCharArray()) {
+        		int tmp = c - '0';
+        		if(tmp <= 0) {
+        			isPickup = false;
+        			break;
+        		}
+        		if(i % tmp != 0) {
+        			isPickup = false;
+        			break;
+        		}
+        	}
+        	if(isPickup)
+        		l.add(i);
+        }
+        return l;
+    }
+	public void levelOrderBottomTraverse(TreeNode node, int level , List<List<Integer>> ret) {//107
+		if(node == null)
+			return;
+		//add new list on top of list
+		if(level > ret.size()) {
+			ret.add(0,new LinkedList<Integer>());
+		}
+		levelOrderBottomTraverse(node.left,level + 1, ret);
+		levelOrderBottomTraverse(node.right,level + 1, ret);
+		System.out.printf("sz:%d level:%d val:%d\n",ret.size(),level,node.val);;
+		List<Integer> l = ret.get(ret.size() - level);
+		l.add(node.val);
+	}
+    public List<List<Integer>> levelOrderBottom(TreeNode root) {
+    	List<List<Integer>> ret = new LinkedList<List<Integer>>();
+    	if(root == null)
+    		return ret;
+		List<Integer> nodeList = new LinkedList<Integer>();
+		nodeList.add(root.val);
+    	if(root.left == null && root.right == null) {
+    		ret.add(nodeList);
+    		return ret;
+    	}
+    	levelOrderBottomTraverse(root,1,ret);
+    	return ret;
+    }
+	public TreeNode invertTreePreOrder(TreeNode curNode) {
+		if(curNode == null)
+			return curNode;
+		
+		TreeNode ret = new TreeNode(curNode.val);
+		ret.left = invertTreePreOrder(curNode.right);
+		ret.right = invertTreePreOrder(curNode.left);
+		return ret;
+	}
+    public TreeNode invertTree(TreeNode root) {
+    	TreeNode ret = null;
+    	if(root == null)
+    		return null;
+    	if(root.left == null && root.right == null)
+    		return root;
+    	ret = invertTreePreOrder(root);
+    	return ret; 
+    }
     public int[] intersection(int[] nums1, int[] nums2) {
     	Set<Integer> retSet = new HashSet<Integer>();
     	int[] ret = new int[0];
