@@ -16,6 +16,40 @@ public class SolutionEasy {
 		int[] a = {1,2,2,1},b = {2,2};
 		intersection(a,b);
 	}
+    public boolean wordPattern(String pattern, String str) {
+    	int[] map = new int[pattern.length()];
+    	String[] strArrs;
+    	HashMap<Integer,String> hm = new HashMap<Integer,String>();
+    	if(pattern.isEmpty() || str.isEmpty())
+    		return false;
+    	
+    	for(int i = 0; i < pattern.length(); i++)
+    		map[i] = pattern.charAt(i) - 'a';
+    	
+    	strArrs = str.split(" ");
+    	if(map.length != strArrs.length)
+    		return false;
+    	
+    	for(int i = 0; i < map.length; i++) {
+    		if(hm.containsKey(map[i])) {
+    			if(!hm.get(map[i]).equals(strArrs[i]))
+    				return false;
+    		}
+    		else {
+    			if(hm.containsValue(strArrs[i]))
+    				return false;
+    			hm.put(map[i], strArrs[i]);
+    		}
+    	}
+    	return true;
+    }
+    public int poorPigs(int buckets, int minutesToDie, int minutesToTest) {
+    	int pigs = 0;
+    	while(Math.pow(minutesToTest/minutesToDie + 1, pigs) < buckets)
+    		pigs ++;
+    	return pigs;
+        
+    }
     public int[][] floodFill(int[][] image, int sr, int sc, int newColor) {
         
     	Queue<MyPair<Integer,Integer>> q = new LinkedList<MyPair<Integer,Integer>>();

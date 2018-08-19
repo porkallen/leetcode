@@ -6,6 +6,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 import java.util.Queue;
 import java.util.Set;
@@ -20,11 +21,40 @@ public class SolutionMedium {
 		root.right = new TreeNode(5);
 		root.right.right = new TreeNode(6);
 		//flatten(root);
-		System.out.printf("%d \n",numTrees(3));
-		
+		//System.out.printf("%d \n",numTrees(3));
+		String s = "aaaaaaa";
+		List<String> l = new ArrayList<String>();
+		l.add("aaaa");
+		l.add("aaa");
+
+		System.out.printf("%s \n",wordBreak(s,l));
+	}
+	public boolean wordBreakDFS(String s, HashMap<String,Integer> hm, int curIdx, boolean[] dp) {
+		boolean ret = false;
+		if(curIdx == s.length()) {
+			return true;
+		}
+			
+		for(int i = 1; curIdx + i <= s.length(); i++) {
+			String tmpS = s.substring(curIdx, curIdx + i);
+			if(hm.get(tmpS) != null && !dp[curIdx]) {
+				if(wordBreakDFS(s,hm,curIdx+i,dp))
+					return true;
+			}
+		}
+		dp[curIdx] = true;
+		return false;
 	}
     public boolean wordBreak(String s, List<String> wordDict) {
-        
+    	boolean[] dp = new boolean[s.length() + 1];
+    	HashMap<String,Integer> hm = new HashMap<String,Integer>();
+    	if(s.length() == 0 || wordDict.isEmpty())
+    		return false;
+    	for(String tmpS : wordDict) {
+    		hm.put(tmpS, 1);
+    	}
+    	Arrays.fill(dp, false);
+    	return wordBreakDFS(s, hm, 0, dp);    	
     }
 	public class BSTIterator {
 		TreeNode treeRoot;
