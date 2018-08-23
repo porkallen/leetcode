@@ -14,20 +14,382 @@ import java.util.Stack;
 
 public class SolutionMedium {
 	SolutionMedium(){
-		TreeNode root = new TreeNode(1);
-		root.left = new TreeNode(2);
-		root.left.left = new TreeNode(3);
-		root.left.right = new TreeNode(4);
-		root.right = new TreeNode(5);
-		root.right.right = new TreeNode(6);
-		//flatten(root);
-		//System.out.printf("%d \n",numTrees(3));
-		String s = "aaaaaaa";
-		List<String> l = new ArrayList<String>();
-		l.add("aaaa");
-		l.add("aaa");
+	}
+    public int threeSumClosest(int[] nums, int target) {
+    	int ret = 0, minDiff = Integer.MAX_VALUE;
+    	if(nums.length <= 0)
+    		return 0;
+    	Arrays.sort(nums);
+    	for(int i = 0; i < nums.length; i++) {
+    		int left = i + 1, right = nums.length - 1;
+    		while(left < right) {
+    			int sum = nums[i] + nums[left] + nums[right];
+    			if(minDiff > Math.abs(target - sum)) {
+    				ret = sum;
+    				minDiff = Math.abs(target - sum);
+    			}
+    			if(sum < target) {
+    				left++;
+    			}
+    			else {
+    				right--;
+    			}
+    		}
+    	}
+    	return ret;
+    }
+    public int maxArea(int[] height) {
+    	int ret = Integer.MIN_VALUE, l = 0, r = height.length - 1;
+        if(height.length <= 1)
+        	return ret;
+        while(l < r) {
+        	int val = Math.min(height[l], height[r]) * Math.abs(l - r);
+        	ret = Math.max(ret, val);
+        	if(height[l] < height[r]) {
+        		l += 1;
+        	}
+        	else
+        		r -=1;
+        }
+        return ret;
+    }
+    public String intToRoman(int num) {
+    	StringBuilder sb = new StringBuilder();
+    	int[] a = {1000,900,500,400,100,90,50,40,10,9,5,4,1};
+    	String[] b = {"M","CM","D","CD","C","XC","L","XL","X","IX","V","IV","I"};
+        for(int i = 0; i < a.length; i++) {
+        	int tmp = num / a[i];
+        	for(int j = 0; j < tmp; j++) {
+        		sb.append(b[i]);
+        	}
+        	num -= tmp * a[i];
+        }
+        return sb.toString();
+    }
+    public List<List<Integer>> threeSum(int[] nums) {
+    	Set<List<Integer>> hs = new HashSet<List<Integer>>();
+    	List<List<Integer>> retList = new LinkedList<List<Integer>>();
+    	HashMap<Integer,Integer> hm = new HashMap<Integer,Integer>();
+    	if(nums.length == 0)
+    		return retList;
 
-		System.out.printf("%s \n",wordBreak(s,l));
+    	Arrays.sort(nums);
+        for(int i = 0; i < nums.length; i++) {
+        	for(int j = i + 1; j < nums.length; j++) {
+            	int thirdNum = -(nums[i] + nums[j]);
+            	if(hm.get(thirdNum) != null) {
+            		int v = hm.get(thirdNum);
+            		List<Integer> l = new LinkedList<Integer>();
+            		l.add(nums[i]);
+            		l.add(nums[j]);
+            		l.add(thirdNum);
+            		hs.add(l);
+            		hm.put(thirdNum,v);
+            	}
+        	}
+        	int val = hm.getOrDefault(nums[i], 0);
+        	hm.put(nums[i], ++val);
+        }
+        retList = new LinkedList<List<Integer>>(hs); 
+        return retList;
+    }
+    public int[] tree(int[] x, int[] y, int[] a, int[] b) {
+        // Write your code here
+        int[] retArrs = new int[0];
+        HashMap<Integer,Integer> hm = new HashMap<Integer,Integer>();
+        MyGraph mg = new MyGraph(100000);
+        if(x.length * y.length * a.length * b.length == 0)
+            return retArrs;
+        
+        for(int i = 0; i < x.length; i++) {
+        	mg.add(x[i], y[i]);
+        	mg.add(y[i], x[i]);
+        }
+        Queue<MyPair<Integer,Integer>> q = new LinkedList<MyPair<Integer,Integer>>();
+        q.add(new MyPair<Integer,Integer>(1,-1));
+        while(!q.isEmpty()){
+            MyPair<Integer,Integer> curNode = q.poll();
+            hm.put(curNode.getKey(),curNode.getValue());
+            for(int num : mg.adj[curNode.getKey()]){
+                if(hm.get(num) == null)
+                    q.add(new MyPair<Integer,Integer>(num,curNode.getKey()));
+            }
+        }
+        retArrs = new int[a.length];
+        int retArrsIdx = 0;
+        for(int i = 0; i < a.length; i++){
+            int p1 = hm.get(a[i]), p2 = hm.get(b[i]);
+            int val = 0;
+            if(p1 == p2)
+                val = 1;
+            else if(a[i] == p2 || p1 == b[i])
+                val = 2;
+            retArrs[retArrsIdx++] = val;
+        }
+        return retArrs;
+    }
+	class LRUCache {
+		private class Node {
+			int key;
+			int val;
+			Node prev,next;
+		}
+		HashMap<Integer,Node> hm;
+		Node head,tail;
+		int curSz,sz;
+	    public LRUCache(int capacity) {
+	    	this.hm = new HashMap<Integer,Node>();
+	    	this.curSz = 0;
+	    	this.sz = capacity;
+	    	this.head = new Node();
+	    	this.head.prev = null;
+	    	this.tail = new Node();
+	    	this.tail.next = null;
+	    	head.next = tail;
+	    	tail.prev = head;
+	    }
+	    public int get(int key) {
+	    	int retVal = (-1);
+	        if(this.hm.containsKey(key)) {
+	        	Node n = this.hm.get(key);
+	        	remove(n);
+	        	insert(n);
+	        	retVal = this.hm.get(key).val;
+	        }
+	        System.out.printf("====Get Key:%d Val:%d====\n",key,retVal);
+        	statusPrintf();
+        	return retVal;
+	    }
+	    public void put(int key, int value) {
+	    	Node node = hm.get(key);
+	    	if(node == null) {
+	    		node = new Node();
+	    		node.key = key;
+	    		node.val = value;
+	    		hm.put(key, node);
+	    		this.insert(node);
+	    		if(this.isQFull()) {
+	    			Node n = popTail();
+	    			hm.remove(n.key);
+	    		}
+	    	}
+	    	else {
+	    		node.val = value;
+	    		this.remove(node);
+	    		this.insert(node);
+	    	}
+	        System.out.printf("====Put Key:%d Val:%d====\n",key,value);
+        	statusPrintf();
+	    }    
+	    public boolean isQFull() {
+	    	return (this.curSz > this.sz);
+	    }
+	    public void insert(Node n) {//always insert after head
+	    	n.prev = this.head;
+	    	n.next = this.head.next;
+	    	if(this.head.next != null) {
+		    	this.head.next.prev = n;
+	    	}
+	    	this.head.next = n;
+    		this.curSz++;
+	    }
+	    private Node popTail(){
+	    	Node n = tail.prev;
+	    	this.remove(n);
+	    	return n;
+	    }
+	    public void remove(Node n) {
+	    	if(n.prev != null)
+	    		n.prev.next = n.next;
+	    	if(n.next != null)
+	    		n.next.prev = n.prev;
+	    	this.curSz--;
+	    }
+	    public void statusPrintf() {
+	    	System.out.printf("Queue Status \n");
+	    	System.out.printf("Queue cur Sz:%d (cap:%d) \n",curSz,sz);
+	    	System.out.printf("Queue Content \n");
+	    	Node t = head.next;
+	    	while(t != null && t!= tail) {
+	    		System.out.printf("(K:%d,V:%d) ",t.key,t.val);
+	    		t = t.next;
+	    	}
+    		System.out.printf("\n");
+	    	System.out.printf("Hash Status \n");
+	    	for(Map.Entry<Integer, Node> entry: hm.entrySet()) {
+	    		System.out.printf("K:%d,V:%d ",entry.getKey(),entry.getValue().val);
+	    	}
+    		System.out.printf("\n");
+	    }
+	}
+    public int getBestRoad(int[][] grid) {//lintcode 1446,notes
+        // Write your code here
+     	int retVal = Integer.MAX_VALUE;
+     	int START_IDX = 0, END_IDX = 1, rowLen = grid.length, colLen = grid[0].length;
+     	
+     	ArrayList<MyPair<Integer,Integer>> blockList = new ArrayList<MyPair<Integer,Integer>>();
+     	for(int i = 0; i < rowLen; i++) {
+     		for(int j = 0; j < colLen; j++) {
+     			if(grid[i][j] == 1)
+     				blockList.add(new MyPair<Integer,Integer>(i,j));
+     		}
+     	}
+     	
+     	ArrayList<MyPair<Integer,Integer>> movCordSet = new ArrayList<MyPair<Integer,Integer>>();
+     	movCordSet.add(new MyPair<Integer,Integer>(0,1));
+     	movCordSet.add(new MyPair<Integer,Integer>(0,-1));
+     	movCordSet.add(new MyPair<Integer,Integer>(1,0));
+     	movCordSet.add(new MyPair<Integer,Integer>(-1,0));
+     	
+     	int[][][] maps = new int[2][rowLen][colLen];
+     	for(int [][] m1 : maps)
+     		for(int[] m2 : m1)
+     			Arrays.fill(m2, Integer.MAX_VALUE);
+     	
+     	MyPair<Integer,Integer> start = new MyPair<Integer,Integer>(0,0);
+     	MyPair<Integer,Integer> end = new MyPair<Integer,Integer>(rowLen - 1,colLen - 1);
+     	
+     	for(int i = START_IDX; i <= END_IDX; i++) {
+         	Queue<MyPair<Integer,Integer>> q = new LinkedList<MyPair<Integer,Integer>>(); 
+
+     		if(i == START_IDX) {
+     			maps[i][0][0] = 0;
+     			q.add(start);
+     		}
+     		else {
+     			maps[i][rowLen - 1][colLen - 1] = 0;
+     			q.add(end);
+     		}
+     		
+         	while(!q.isEmpty()) {
+         		MyPair<Integer,Integer> cur = q.poll();
+         		if(maps[i][0][0] == 1 || maps[i][rowLen - 1][colLen - 1] == 1)
+                     return -1;
+         		for(MyPair<Integer,Integer> p : movCordSet) {
+         			int nextR = cur.getKey().intValue() + p.getKey().intValue();
+         			int nextC = cur.getValue().intValue() + p.getValue().intValue();
+         			if((nextR >= 0 && nextR < rowLen) && (nextC >= 0 && nextC < colLen)
+         					&& grid[nextR][nextC] != 1) {
+         				int curSteps = maps[i][cur.getKey().intValue()][cur.getValue().intValue()];
+         				if((curSteps + 1) < maps[i][nextR][nextC]) {
+         	    		    q.add(new MyPair<Integer,Integer>(nextR,nextC));
+             			    maps[i][nextR][nextC] = curSteps + 1;
+         				}
+         			}
+         		}
+         	}
+     	}
+     	
+     	for(MyPair<Integer,Integer> bNode : blockList) {
+     		int bRow = bNode.getKey(), bCol = bNode.getValue();
+     		/*Left v.s Right and */
+     		if(bRow - 1 >= 0) {
+     			int num1 = Integer.MAX_VALUE,num2 = Integer.MAX_VALUE;
+     			if(bRow + 1 < rowLen && maps[START_IDX][bRow - 1][bCol] != Integer.MAX_VALUE
+     					&& maps[END_IDX][bRow + 1][bCol] != Integer.MAX_VALUE) {
+     				num1 = maps[START_IDX][bRow - 1][bCol] + maps[END_IDX][bRow + 1][bCol] + 2;
+     			}
+     			if(bCol + 1 < colLen && maps[START_IDX][bRow - 1][bCol] != Integer.MAX_VALUE
+     					&& maps[END_IDX][bRow][bCol + 1] != Integer.MAX_VALUE) {
+     				num2 = maps[START_IDX][bRow - 1][bCol] + maps[END_IDX][bRow][bCol + 1] + 2;
+     			}
+     			retVal = Math.min(retVal, Math.min(num1,num2));
+     		}
+     		if(bCol - 1 >= 0) {
+     			int num1 = Integer.MAX_VALUE,num2 = Integer.MAX_VALUE;
+     			if(bRow + 1 < rowLen && maps[START_IDX][bRow][bCol - 1] != Integer.MAX_VALUE
+     					&& maps[END_IDX][bRow + 1][bCol] != Integer.MAX_VALUE) {
+     				num1 = maps[START_IDX][bRow][bCol - 1] + maps[END_IDX][bRow + 1][bCol] + 2;
+     			}
+     			if(bCol + 1 < colLen && maps[START_IDX][bRow][bCol - 1] != Integer.MAX_VALUE
+     					&& maps[END_IDX][bRow][bCol + 1] != Integer.MAX_VALUE) {
+     				num2 = maps[START_IDX][bRow][bCol - 1] + maps[END_IDX][bRow][bCol + 1] + 2;
+     			}
+     			retVal = Math.min(retVal, Math.min(num1,num2));
+     		}
+     	}
+     	return retVal == Integer.MAX_VALUE? -1 : retVal;
+    }
+	class UndirectedGraphNode {
+		int label;
+		List<UndirectedGraphNode> neighbors;
+		UndirectedGraphNode(int x) { label = x; neighbors = new ArrayList<UndirectedGraphNode>(); }
+	};
+    public UndirectedGraphNode cloneGraph(UndirectedGraphNode node) {
+        Queue<UndirectedGraphNode> q = new LinkedList<UndirectedGraphNode>();
+        HashMap<UndirectedGraphNode,UndirectedGraphNode> hm = 
+        		new HashMap<UndirectedGraphNode,UndirectedGraphNode>();
+        if(node == null)
+        	return null;
+        
+        q.add(node);      
+        while(!q.isEmpty()) {
+        	UndirectedGraphNode oriNode = q.poll();
+        	if(hm.get(oriNode) != null) continue;
+        	hm.put(oriNode,new UndirectedGraphNode(oriNode.label));
+        	for(UndirectedGraphNode n : oriNode.neighbors) {
+        		q.add(n);
+        	}
+        }
+        for(Map.Entry<UndirectedGraphNode, UndirectedGraphNode> entry : hm.entrySet()) {
+        	UndirectedGraphNode oriNode = entry.getKey();
+        	UndirectedGraphNode newNode = entry.getValue();
+        	for(UndirectedGraphNode n : oriNode.neighbors) {
+            	UndirectedGraphNode nbNode = hm.get(n);
+            	newNode.neighbors.add(nbNode);
+        	}
+        }       
+        return hm.get(node);
+    }
+    public int findPeakElement(int[] nums) {
+        int left = 0, right = nums.length - 1;
+        if(nums.length <= 0)
+        	return -1;
+        
+        while(left < right) {
+        	int mid = left + (right - left)/2 + 1;
+        	
+        	int adjLeft = (mid - 1) < 0 ? Integer.MIN_VALUE : nums[mid - 1];
+        	int adjRight = (mid + 1) >= nums.length ? Integer.MIN_VALUE : nums[mid + 1];
+        	if(nums[mid] > adjRight && nums[mid] > adjLeft)
+        		return mid;
+        	if(nums[mid] > nums[left]){
+        		right = mid - 1;
+        	}
+        	if(nums[mid] < nums[right]) {
+        		left = mid + 1;
+        	}
+        	if(right >= nums.length)
+        		right = Integer.MIN_VALUE;
+        	if(left <= -1)
+        		left = Integer.MAX_VALUE;
+        }
+        if(left == right) {
+        	int adjLeft = (left - 1) < 0 ? Integer.MIN_VALUE : nums[left - 1];
+        	int adjRight = (left + 1) >= nums.length ? Integer.MIN_VALUE : nums[left + 1];
+        	if(nums[left] > adjRight && nums[left] > adjLeft)
+        		return left;
+        }
+        return -1;
+    }
+	public int minSubArrayLen(int s, int[] nums) {
+	    int minLen = Integer.MAX_VALUE;
+	    int sum = 0;
+	    int left = 0, right = 0;
+	    if(nums.length == 0 || s <= 0)
+	    return 0;
+	    while(right < nums.length) {
+	    sum += nums[right];
+	    while(sum >= s && left < right) {
+	        minLen = Math.min(minLen, right - left + 1);
+	        sum -= nums[left++];
+	    }
+	    right++;
+	    }
+	    if(minLen == Integer.MAX_VALUE)
+	    return 0;
+
+	    return minLen;
 	}
 	public boolean wordBreakDFS(String s, HashMap<String,Integer> hm, int curIdx, boolean[] dp) {
 		boolean ret = false;

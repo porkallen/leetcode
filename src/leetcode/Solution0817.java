@@ -17,13 +17,13 @@ import java.util.Set;
 
 public class Solution0817 {
 	Solution0817(){
-		//int[][] a = {{2,10}};
+		int[][] a = {{7,9},{8,14}};
 		//int[][] a = {{36,77},{5,54},{5,42},{31,37},{10,36},{15,66},{58,68}};
 		//getOutput("111111111111111111111111111111111111111111");
-		//modernLudo(86,a);
-		int[] a = {1,1,1};
-		int[] b = {2,3,4};
-		socialNetwork(4,a,b);
+		modernLudo(15,a);
+		//int[] a = {1,1,1};
+		//int[] b = {2,3,4};
+		//socialNetwork(4,a,b);
 	}
     public void socialNetworkDFS(int n, int cur, HashMap<Integer, LinkedList<Integer>> hm, boolean[] visited){
         LinkedList<Integer> l = hm.get(cur);
@@ -59,31 +59,16 @@ public class Solution0817 {
         return "yes";
     }
     public int modernLudo(int length, int[][] connections) {
-    	HashMap<Integer,LinkedList<Integer>> hm = new HashMap<Integer,LinkedList<Integer>>();
-    	HashMap<Integer,Integer> shortestMap = new HashMap<Integer,Integer>();
+    	HashMap<Integer,LinkedList<Integer>> connMap = new HashMap<Integer,LinkedList<Integer>>();
+    	HashMap<Integer,Integer> distMap = new HashMap<Integer,Integer>();
     	Queue<MyPair<Integer,Integer>> q = new LinkedList<MyPair<Integer,Integer>>();
-    	int DICEIDX = 6;
+    	int DICENUM = 6;
+    	int ret = Integer.MAX_VALUE;
     	
-    	if(length == 0)
-    		return 0;
-    	if(length == 1)
-    		return 1;
-    	
-    	for(int i = 1; i < length; i++) {
-    		LinkedList<Integer> l = new LinkedList<Integer>();
-    		for(int j = 1; j <= 6; j++) {
-    			l.add(j);
-    		}
-    		hm.put(i, l);
-    	}
-    	for(int[] connection : connections) {
-    		if(connection.length > 1) {
-    			if(hm.get(connection[0]) != null) {
-    				LinkedList<Integer> l = hm.get(connection[0]);
-    				l.add(connection[1]);
-    				hm.put(connection[0],l);
-    			}
-    		}
+    	for(int[] conn : connections) {
+    		LinkedList<Integer> ll = connMap.getOrDefault(conn[0], new LinkedList<Integer>());
+    		ll.add(conn[1]);
+    		connMap.put(conn[0], ll);
     	}
     	
     	q.add(new MyPair<Integer,Integer>(1,0));
@@ -91,35 +76,29 @@ public class Solution0817 {
 			MyPair<Integer,Integer> p = q.poll();
 			int curPoint = p.key;
 			int curSteps = p.value;
-			if(shortestMap.get(curPoint) != null) {
-				int sSteps = shortestMap.get(curPoint);
-				if(curSteps > sSteps)
-					continue;
-			}
-			if(curPoint == length) {
-				shortestMap.put(curPoint,curSteps);
-				break;
-			}
-			
-			LinkedList<Integer> l = hm.get(curPoint);
-			for(int i = 0; i < l.size(); i++) {
-				int jSteps = 0;
-				if(i >= DICEIDX) {
-					jSteps = curSteps;
+
+			/*Jump Conditions*/
+			if(connMap.get(curPoint) != null) {
+				LinkedList<Integer> l = connMap.get(curPoint);
+				for(Integer dest : l) {
+					if(distMap.get(dest) != null &&
+							curSteps >= distMap.get(dest)) {
+					        continue;
+			        }
+					distMap.put(dest,curSteps);
+					q.add(new MyPair<Integer,Integer>(dest,curSteps));
 				}
-				else {
-					jSteps = curSteps + 1;
-				}
-				shortestMap.put(curPoint,jSteps);
-				q.add(new MyPair<Integer,Integer>(curPoint + l.get(i),jSteps));
+			}
+			for(int i = 1; i <= DICENUM; i++) {
+				if((curPoint + i) > length || ((distMap.get(curPoint + i) != null) &&
+						(curSteps + 1) >= distMap.get(curPoint + i) )) {
+				        continue;
+		        }
+				distMap.put(curPoint + i,curSteps + 1);
+				q.add(new MyPair<Integer,Integer>(curPoint + i,curSteps + 1));
 			}
     	}
-		/*for (Map.Entry<Integer, Integer> entry : shortestMap.entrySet()) {
-			Integer key = entry.getKey();
-			Integer value = entry.getValue();
-			System.out.printf("key:%d val:%d \n",key,value);
-		}*/
-		return 0;
+		return distMap.get(length);
     }
     public String isInterval(List<List<Integer>> intervalList, int number) {
     	

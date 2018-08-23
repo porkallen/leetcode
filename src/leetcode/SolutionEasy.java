@@ -14,8 +14,59 @@ import java.util.Stack;
 public class SolutionEasy {
 	SolutionEasy(){
 		int[] a = {1,2,2,1},b = {2,2};
-		intersection(a,b);
+		//intersection(a,b);
 	}
+    public int[] twoSum(int[] numbers, int target) {
+    	int[] retArrs = new int[0];
+    	if(numbers.length == 0 || target == 0)
+    		return retArrs;
+            	
+    	for(int i = 0; i < numbers.length; i++) {
+    		int left = i, right = numbers.length - 1;
+        	while(left < right) {
+        		int mid = left + (right - left )/ 2 + 1;
+        		int curSum = numbers[left] + numbers[mid];
+        		if(curSum == target) {
+        	    	retArrs = new int[2];
+        			retArrs[0] = left + 1;
+        			retArrs[1] = mid + 1;
+        			return retArrs;
+        		}
+        		else if(curSum > target) {
+        			right = mid - 1;
+        		}
+        		else
+        			left = mid + 1;
+        	}
+    	}
+    	return retArrs;
+    }
+	boolean isBadVersion(int mid) {
+		if(mid == 1702766719)
+			return true;
+		else
+			return false;
+	}
+    public int firstBadVersion(int n) {
+    	int ret = Integer.MAX_VALUE, left = 0, mid = 0, right = n;
+    	if(n <= 0)
+    		return 0;
+    	
+    	while(left < right) {
+    		mid = left + (right - left)/2 + 1;
+    		if(!isBadVersion(mid))
+    			left = mid + 1;
+    		else {
+    			right = mid - 1;
+    			ret = Math.min(ret, mid);
+    		}
+    	}
+    	if(left == right) {
+    		if(isBadVersion(left))
+    			ret = Math.min(ret, left);
+    	}
+    	return ret;
+    }
     public boolean wordPattern(String pattern, String str) {
     	int[] map = new int[pattern.length()];
     	String[] strArrs;

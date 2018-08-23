@@ -23,7 +23,8 @@ public class Main {
 		System.out.printf("%s\n",ret);
 	}
 	public static void main(String[] args) {
-		Solution0818 s = new Solution0818();
+		SolutionMedium s = new SolutionMedium();
+		//System.out.printf("%d \n",'.' - '\0');
 		//arrayFormat("[[36,77],[5,54],[5,42],[31,37],[10,36],[15,66],[58,68]]");
     }
 }
