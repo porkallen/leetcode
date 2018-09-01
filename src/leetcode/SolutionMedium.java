@@ -3,18 +3,569 @@ package leetcode;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
+
+import org.w3c.dom.Node;
+
 import java.util.Queue;
 import java.util.Set;
 import java.util.Stack;
 
 public class SolutionMedium {
+	boolean[] checked;
+
 	SolutionMedium(){
+		//generateParenthesis(1);
+		//divide(Integer.MIN_VALUE,2);
+		//restoreIpAddresses("25525511135");
+		int[] a = {2,0,1};
+		//sortColors(a);
+		int[] a1 = {10,5,2,6};
+		numSubarrayProductLessThanK(a1,100);
 	}
+    public int[] searchRange(int[] nums, int target) {
+    	int[] retArrs = {-1,-1}; 
+        if(nums.length <= 0 || target < 0) {
+        	return retArrs;
+        }
+        int left = 0, right = nums.length - 1;
+        while(left < right) {
+        	int mid = left + (right - left)/2 + 1;
+        	if(nums[mid] == target) {
+        		int[] ret = {mid -1, mid};
+        		return ret;
+        	}
+        	else if(nums[mid] < target) {
+        		left = mid + 1;
+        	}
+        	else {
+        		right = mid - 1;
+        	}
+        }
+        if(left == right) {
+        	int[] ret = {left,left + 1};
+        	return ret;
+        }
+    	return retArrs;
+    }
+	public void permuteDFS(int[] nums,List<Integer> l,List<List<Integer>> retList) {
+		if(l.size() == nums.length) {
+			retList.add(l);
+		}
+		for(int i = 0; i < nums.length; i++) {
+			if(!checked[i]) {
+				checked[i] = true;
+				List<Integer> l1 = new LinkedList<Integer>();
+				l1.add(nums[i]);
+				permuteDFS(nums, l1, retList);
+				checked[i] = false;
+			}
+		}
+	}
+    public List<List<Integer>> permute(int[] nums) {
+    	List<List<Integer>> retList = new LinkedList<List<Integer>>();
+    	List<Integer> l = new LinkedList<Integer>();
+        if(nums.length == 0)
+        	return retList;
+        checked = new boolean[nums.length + 1];
+        permuteDFS(nums, l, retList);
+        return retList;
+    }
+    public int numSubarrayProductLessThanK(int[] nums, int k) {
+    	int ret = 0, pd= 1, left = 0;
+        if(k == 0)
+        	return ret;
+        for(int i = 0; i < nums.length; i++) {
+        	
+        	pd *= nums[i];
+        	while(left < i && pd >= k) {
+        		pd /= nums[left++];
+        	}
+        	ret += (i - left) + 1;  
+        	System.out.printf("%d %d\n",pd,ret);
+        }
+        return ret;
+    }
+    public String findLongestWord(String s, List<String> d) {
+        int dictLeft, dictRight, left,right;
+        StringBuffer sb = new StringBuffer();
+        if(d.size() <= 0 || s.length() == 0)
+        	return sb.toString();
+        
+        for(String dict : d) {
+        	left = 0;
+        	right = s.length() - 1;
+        	dictLeft = 0;
+        	dictRight = dict.length() - 1;
+        	while((left < right) && (dictLeft < dictRight)) {
+        		if(dict.charAt(dictLeft) == s.charAt(left)) {
+        			dictLeft++;
+        		}
+        		else
+        			left++;
+        		
+        		if(dict.charAt(dictRight) == s.charAt(right)) {
+        			dictRight--;
+        		}
+        		else
+        			right--;
+        	}
+        	if(dictLeft == dictRight && dict.length() > sb.length()) {
+        		if((sb.length() != 0) && (dict.length() == sb.length()) && (dict.compareTo(sb.toString()) > 0)) {
+        			continue;
+        		}
+        		sb = new StringBuffer(dict);
+        	}
+        }
+        return sb.toString();
+    }
+	
+	int sortColorsSwap(int a, int b) {  // usage: y = swap(x, x=y);
+		   return a;
+	}
+    public void sortColors(int[] nums) {
+    	int leftIdx = 0, curIdx = 0, rightIdx = nums.length - 1;
+    	if(nums.length <= 0)
+    		return;
+    	
+    	while(curIdx <= rightIdx) {
+    		if(nums[curIdx] == 0 && curIdx != leftIdx) {
+    			nums[leftIdx] = sortColorsSwap(nums[curIdx], nums[curIdx] = nums[leftIdx]);
+    			leftIdx ++;
+    		}
+    		else if(nums[curIdx] == 2 && curIdx != rightIdx) {
+    			nums[rightIdx] = sortColorsSwap(nums[curIdx], nums[curIdx] = nums[rightIdx]);
+    			rightIdx --;
+    		}
+    		else
+    			curIdx++;
+        	System.out.printf("%s (%d %d %d )\n",Arrays.toString(nums),leftIdx,curIdx,rightIdx);
+    	}
+    }
+    public ListNode detectCycle(ListNode head) {
+        ListNode fast = head,slow = head;
+        ListNode ret = null;
+        boolean isHit = false;
+        if(head == null || head.next == null || head.next.next == null)
+        	return ret;
+       
+        while(fast.next != null && slow.next != null) {
+        	slow = slow.next;
+        	fast = fast.next.next;
+            if(fast == null)
+                return ret;
+        	if(slow.equals(fast)) {
+                fast = head;
+                while(fast != null && slow != null) {
+
+                    if(fast.equals(slow)) {
+                        return fast;
+                    }
+                    fast = fast.next;
+                    slow = slow.next;
+                }
+        	}
+        }
+        return ret;
+    }
+	public int isBlanacedDFS(TreeNode node, int depth) {
+		int lHeight = 0, rHeight = 0;
+		if(node == null)
+			return depth - 1;
+		
+		if(node.left != null)
+			lHeight = isBlanacedDFS(node.left, depth + 1);
+		if(node.right != null)
+			rHeight = isBlanacedDFS(node.right, depth + 1);
+		
+		return Math.abs(lHeight - rHeight) > 1? -1 : Math.max(lHeight,rHeight);
+	}
+    public boolean isBalanced(TreeNode root) {
+    	int l = 0,r = 0;
+    	
+    	if(root == null || (root.left == null && root.right == null))
+    		return true;
+
+    	l = isBlanacedDFS(root.left,1);
+    	r = isBlanacedDFS(root.right,1);
+    	
+    	return (Math.abs(l - r) > 1);
+        
+    }
+	public void restoreIpAddressesDFS(String s, int rnd, int curIdx, StringBuilder curSb, List<String> l) {
+		if(rnd < 4 && curIdx >= s.length())
+			return;
+		if(rnd == 4 && curIdx >= s.length()) {
+			//System.out.printf("%s \n",curSb.delete(curSb.length() - 1, curSb.length()));
+			curSb.delete(curSb.length() - 1, curSb.length());
+			l.add(curSb.toString());
+			return;
+		}
+		for(int i = 1; i <= 3; i++) {
+			if(curIdx + i <= s.length()) {
+				String tmp = s.substring(curIdx, curIdx + i);
+				if(Integer.valueOf(tmp) >= 0 && Integer.valueOf(tmp) <= 255) {
+                    if(tmp.length() > 1 && tmp.charAt(0) == '0')
+                        continue;
+
+                    StringBuilder tmpSb = new StringBuilder(curSb);
+					tmpSb.append(tmp);
+					tmpSb.append(".");
+					restoreIpAddressesDFS(s,rnd + 1, curIdx + i, tmpSb, l);
+				}
+			}
+		}
+	}
+    public List<String> restoreIpAddresses(String s) {
+    	List<String> retList = new LinkedList<String>();
+    	StringBuilder sb = new StringBuilder();
+    	if(s.length() < 4 || s.length() > 12)
+    		return retList;
+    	restoreIpAddressesDFS(s,0,0,sb,retList);
+    	return retList;
+    }
+	public int uniquePathsDFS(int m, int n, int x, int y,int[][] map) {
+		int ret = 0;
+		if(x == (m - 1) && y == (n - 1)) {
+			return 1;
+		}
+		if(x >= m || y >= n)
+			return 0;
+        if(map[x][y] != 0)
+            return map[x][y];
+        
+		ret += uniquePathsDFS(m,n,x + 1, y,map) + uniquePathsDFS(m,n,x, y + 1,map);
+        map[x][y] = ret;
+		return ret;
+	}
+    public int uniquePaths(int m, int n) {
+        if(m == 0 && n == 0)
+        	return 0;
+        int[][] map = new int[m][n];
+        return uniquePathsDFS(m,n,0,0,map);
+    }
+    public int uniquePathsWithObstacles(int[][] obstacleGrid) {
+    	int rowLen = obstacleGrid.length, colLen = obstacleGrid[0].length;
+        int[][] arrs = new int[rowLen + 1][colLen + 1];
+        arrs[1][1] = 1;
+        for(int i = 1; i < rowLen; i++) {
+        	for(int j = 1; j < colLen; j++) {
+        		if(obstacleGrid[i][j] == 1) {
+        			arrs[i][j] = 0;
+        		}
+        		else {
+            		arrs[i][j] = arrs[i - 1][j] + arrs[i][j - 1];
+        		}
+        	}
+        }
+        return arrs[rowLen][colLen];
+    }
+    public int kSimilarity(String A, String B) {
+    	int retK = 0, diff = 0;
+        if(A.length() * B.length() == 0)
+        	return retK;
+        if(A.length() != B.length())
+        	return retK;
+        
+        char[] aChars = A.toCharArray(), bChars = B.toCharArray();
+        Arrays.sort(aChars);
+        Arrays.sort(bChars);
+        if(!aChars.equals(bChars))
+        	return retK;
+        
+        for(int i = 0; i < A.length(); i++) {
+        	System.out.printf("%c %c \n",A.charAt(i),B.charAt(i));
+        	if(A.charAt(i) != B.charAt(i))
+        		diff++;
+        }
+        return diff/2; 
+    }
+    public TreeNode lowestCommonAncestor(TreeNode root, TreeNode p, TreeNode q) {
+        if(root.val > p.val && root.val > q.val){
+            return lowestCommonAncestor(root.left, p, q);
+        }else if(root.val < p.val && root.val < q.val){
+            return lowestCommonAncestor(root.right, p, q);
+        }else{
+            return root;
+        }
+    }
+    public int divide(int dividend, int divisor) {
+    	int OVERFLOW = Integer.MAX_VALUE;
+    	int sign = 1;
+    	int q = 0;
+    	if(divisor == 0)
+    		return OVERFLOW;
+    	if((dividend < 0 && divisor > 0) || (dividend > 0 && divisor < 0))
+    		sign = -1;
+    	long num = 0;
+    	long div = Math.abs(divisor);
+    	if(dividend == Integer.MIN_VALUE) {
+    		num = Integer.MAX_VALUE;
+    		num += 1;
+    	}
+        else
+            num = new Long((Math.abs(dividend)));
+    	    	
+    	int cnt = 0;
+    	while(num >= div) {
+    		long temp = div << cnt;
+    		if(temp > num) {
+    			cnt = 0;
+    			temp = div << cnt;
+    		}
+    		num -= temp;
+    		q += (1 << cnt);
+        	//System.out.printf("num:%d tmp:%d q:%d\n",num,temp,q);
+    		cnt++;
+    	}	
+    	//System.out.printf("%d \n",q);
+    	return sign * q; 
+    }
+	public void widthOfBinaryTreeDFS(TreeNode node, int depth,int cnt, HashMap<Integer,ArrayList<Integer>> hm) {
+		if(node == null) {
+			return;
+		}
+		ArrayList<Integer> l = hm.getOrDefault(depth + 1, new ArrayList<Integer>());
+		if(node.left != null) {
+			l.add(cnt * 2);
+			hm.put(depth + 1, l);
+			widthOfBinaryTreeDFS(node.left,depth + 1 , cnt * 2,hm);
+		}
+		if(node.right != null) {
+			l.add(cnt * 2 + 1);
+			hm.put(depth + 1, l);
+			widthOfBinaryTreeDFS(node.right,depth + 1, cnt * 2 + 1,hm);
+		}
+	}
+    public int widthOfBinaryTree(TreeNode root) {
+    	int ret = 0, sum = 0;;
+    	ArrayList<Integer> dList = new ArrayList<Integer>();
+    	HashMap<Integer,ArrayList<Integer>> hm = new HashMap<Integer, ArrayList<Integer>>();
+    	if(root == null)
+    		return 0;
+    	if(root.left == null && root.right == null)
+    		return 1;
+    	dList.add(1);
+    	widthOfBinaryTreeDFS(root,0,1,hm);
+    	hm.entrySet()
+    	.stream()
+    	.sorted(Map.Entry.comparingByKey(Comparator.reverseOrder()))
+    	.forEachOrdered(x -> hm.put(x.getKey(), x.getValue()));
+    	
+    	for(Map.Entry<Integer,ArrayList<Integer>> entry : hm.entrySet()) {
+    		int depth = entry.getKey();
+    		ArrayList<Integer> l = entry.getValue();
+    		if(l.size() > 1) {
+    			//System.out.printf("D:%d ret:%s \n",depth,l.toString());
+                ret = Math.max(ret,l.get(l.size() - 1) - l.get(0) + 1);
+    			
+    		}
+    	}
+    	return ret;
+    }
+    public ListNode swapPairs(ListNode head) {
+    	ListNode pNode, cNode;
+    	if(head.next == null)
+    		return head;
+    	
+    	pNode = head;
+    	cNode = head.next;
+    	if(head.next.next == null) {
+    		cNode.next = pNode;
+    		pNode = cNode;
+    		return head;
+    	}
+    	while(cNode != null) {
+    		pNode.next = cNode.next;
+    		cNode.next = pNode;
+    		if(pNode.next == null)
+    			break;
+    		if(pNode.next.next == null)
+    			break;
+    		pNode = pNode.next;
+    		cNode = pNode.next.next;
+    	}
+    	return head;
+    }
+	public void permuteUniqueR(int[] nums, int acc, List<Integer> tmpList, Set<List<Integer>> hs) {
+		if(acc == nums.length) {
+			hs.add(tmpList);
+			return;
+		}
+		for(int i = 0; i < nums.length; i++) {
+			if(!checked[i]) {
+				checked[i] = true;
+				List<Integer> tmpList1 = new LinkedList<Integer>(tmpList);
+				tmpList1.add(nums[i]);
+				permuteUniqueR(nums,acc + 1, tmpList1, hs);
+				checked[i] = false;
+			}
+		}
+	}
+    public List<List<Integer>> permuteUnique(int[] nums) {
+    	Set<List<Integer>> retSet = new HashSet<List<Integer>>();
+    	List<List<Integer>> retList = new LinkedList<List<Integer>>(retSet);
+
+    	List<Integer> tmpList = new LinkedList<Integer>();
+    	if(nums.length == 0)
+    		return retList;
+    	
+    	checked = new boolean[nums.length];
+    	permuteUniqueR(nums,0,tmpList,retSet);
+    	retList = new LinkedList<List<Integer>>(retSet);
+    	return retList;
+    }
+	public void generateParenthesisR(int n, int acc, int lcnt, int rcnt, StringBuilder sb, List<String> l) {
+		char[] pArrs = {'(',')'};
+		//System.out.printf("L:%d R:%d %s \n",lcnt,rcnt, sb.toString());
+		if((lcnt + rcnt) == n * 2 && acc == 0) {
+			l.add(sb.toString());
+			return;
+		}
+		for(int i = 0; i < pArrs.length; i++) {
+			StringBuilder sb1 = new StringBuilder(sb);
+			if(i == 0 && acc <= n && lcnt <= n) {
+				sb1.append(pArrs[i]);
+				generateParenthesisR(n, acc + 1, lcnt + 1, rcnt, sb1, l);
+			}
+			else if(i == 1 && acc > 0 && rcnt <= n){
+				sb1.append(pArrs[i]);
+				generateParenthesisR(n, acc - 1, lcnt, rcnt + 1, sb1, l);
+			}
+		}
+	}
+    public List<String> generateParenthesis(int n) {
+    	List<String> retList = new LinkedList<String>();
+    	if(n == 0)
+    		return retList;
+    	
+    	StringBuilder sb = new StringBuilder();
+    	sb.append('(');
+    	generateParenthesisR(n, 1, 1, 0, sb, retList);
+    	for(String s: retList)
+    		System.out.printf("%s \n",s);
+    	return retList; 
+    }
+    public ListNode removeNthFromEnd(ListNode head, int n) {
+    	HashMap<Integer,ListNode> hm = new HashMap<Integer,ListNode>();
+    	int sz = 0;
+    	if(head == null || n < 0)
+    		return head;
+    	
+    	ListNode tNode = head;
+    	for(int i = 1; tNode != null; i++) {
+    		hm.put(i, tNode);
+    		tNode = tNode.next;
+    		sz++;
+    	}
+    	if(n > sz)
+    		return head;
+    	
+    	tNode = hm.get(sz - n + 1);
+    	if(tNode == head) {
+    		head = tNode.next;
+    	}
+    	else {
+    		ListNode preNode = hm.get(sz - n);
+    		if(preNode != null)
+    			preNode.next = tNode.next;
+    	}
+    	return head;
+    }
+    public List<List<Integer>> fourSum(int[] nums, int target) {
+    	Set<List<Integer>> retSet = new HashSet<List<Integer>>();
+    	HashMap<Integer, Integer> hm = new HashMap<Integer,Integer>();
+    	
+    	Arrays.sort(nums);
+    	for(int i = 0 ; i < nums.length; i++) {
+    		for(int j = i + 1; j < nums.length; j++) {
+    			for(int k = j + 1; k < nums.length; k++) {
+    				int fourthNum = target - nums[i] - nums[j] - nums[k];
+    				if(hm.containsKey(fourthNum)) {
+    					List<Integer> l = new LinkedList<Integer>();
+    					l.add(nums[i]);
+    					l.add(nums[j]);
+    					l.add(nums[k]);
+    					l.add(fourthNum);
+    					retSet.add(l);
+    				}
+    			}
+    		}
+    		hm.put(nums[i], 1);
+    	}
+    	List<List<Integer>> retList = new LinkedList<List<Integer>>(retSet);
+    	return retList;
+    }
+	public void letterCombinationsDFS(String digits, StringBuilder sb, List<String> sList, HashMap<Integer,String> hm){
+		if(sb.length() == digits.length()) {
+			sList.add(sb.toString());
+			return;
+		}
+		
+		char curDigit = digits.charAt(sb.length());
+		String s = hm.get((int)(curDigit - '0'));
+		for(int i = 0; i < s.length(); i++) {
+				StringBuilder sb1 = new StringBuilder(sb);
+				sb1.append(s.charAt(i));
+				letterCombinationsDFS(digits,sb1,sList,hm);
+		}
+	}
+    public List<String> letterCombinations(String digits) {
+    	HashMap<Integer,String> hm = new HashMap<Integer,String>();
+    	StringBuilder sb1 = new StringBuilder();
+    	List<String> sList = new LinkedList<String>();
+		char c = 'a';
+		if(digits.length() <= 0)
+			return sList;
+		
+    	for(int i = 2; i <= 9 ; i++) {
+    		StringBuilder sb = new StringBuilder();
+    		int len = 3;
+    		if(i == 7 || i == 9)
+    			len = 4;
+    		for(int j = 0; j < len; j++) {
+    			sb.append(c);
+    			c++;
+    		}
+    		hm.put(i,sb.toString());
+    	}
+    	letterCombinationsDFS(digits,sb1,sList,hm);
+    	//for(String s : sList)
+    	//	System.out.printf("%s ",s);
+    	return sList;
+    }
+	public void combinationSum(int[] c, int target, int sum, List<Integer> l, Set<List<Integer>> hs) {
+		if(sum > target)
+			return;
+		if(sum == target){
+            Collections.sort(l);
+			hs.add(l);
+        }
+		for(int i = 0; i < c.length; i++) {
+			List<Integer> tmpList = new LinkedList<Integer>(l);
+			tmpList.add(c[i]);
+			combinationSum(c, target, sum + c[i], tmpList, hs);
+		}
+		
+	}
+    public List<List<Integer>> combinationSum(int[] candidates, int target) {
+    	Set<List<Integer>> hs = new HashSet<List<Integer>>();
+    	List<List<Integer>> retList = new LinkedList<List<Integer>>(hs);
+        if(candidates.length <= 0)
+        	return retList;
+        
+        List<Integer> l = new LinkedList<Integer>();
+        combinationSum(candidates, target,0,l,hs);
+        
+    	retList = new LinkedList<List<Integer>>(hs);
+        return retList;
+    }
     public int threeSumClosest(int[] nums, int target) {
     	int ret = 0, minDiff = Integer.MAX_VALUE;
     	if(nums.length <= 0)
@@ -344,7 +895,7 @@ public class SolutionMedium {
     public int findPeakElement(int[] nums) {
         int left = 0, right = nums.length - 1;
         if(nums.length <= 0)
-        	return -1;
+        	return 0;
         
         while(left < right) {
         	int mid = left + (right - left)/2 + 1;
@@ -353,10 +904,10 @@ public class SolutionMedium {
         	int adjRight = (mid + 1) >= nums.length ? Integer.MIN_VALUE : nums[mid + 1];
         	if(nums[mid] > adjRight && nums[mid] > adjLeft)
         		return mid;
-        	if(nums[mid] > nums[left]){
+        	if(nums[mid] < adjLeft){
         		right = mid - 1;
         	}
-        	if(nums[mid] < nums[right]) {
+        	else{
         		left = mid + 1;
         	}
         	if(right >= nums.length)
@@ -370,7 +921,7 @@ public class SolutionMedium {
         	if(nums[left] > adjRight && nums[left] > adjLeft)
         		return left;
         }
-        return -1;
+        return 0;
     }
 	public int minSubArrayLen(int s, int[] nums) {
 	    int minLen = Integer.MAX_VALUE;
