@@ -29,6 +29,35 @@ public class SolutionMedium {
 		int[] a1 = {10,5,2,6};
 		numSubarrayProductLessThanK(a1,100);
 	}
+    public int search(int[] nums, int target) {
+    	int ret = -1;
+    	if(nums.length <= 0)
+    		return ret;
+    	int left = 0, right = nums.length - 1;
+    	while(left < right) {
+    		int mid = left + (right - left)/2;
+    		if(nums[mid] < nums[right]) {
+    			right = mid; 
+    		}
+    		else {
+    			left = mid + 1;
+            }
+        }
+    	int sIdx = left;
+    	if(target < nums[sIdx])
+    		return ret;
+    	
+    	
+    	int leftTarget = Misc.lowerbound(nums, 0, sIdx, target);
+    	int rightTarget = Misc.lowerbound(nums, sIdx , nums.length, target);
+    	
+        //System.out.printf("%d %d \n", leftTarget, rightTarget);
+        if(leftTarget != sIdx && nums[leftTarget] == target)
+            return leftTarget;
+        if(rightTarget != nums.length && nums[rightTarget] == target)
+            return rightTarget;
+    	return ret;  
+    }
     public int[] searchRange(int[] nums, int target) {
     	int[] retArrs = {-1,-1}; 
         if(nums.length <= 0 || target < 0) {
