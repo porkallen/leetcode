@@ -8,7 +8,6 @@ public class Misc {
 		   return a;
 	}
     public static void nextPermutation(int[] nums) {
-        
     }
 	public static int lowerbound(int[] nums,int leftBoud, int rightBound, int target) {
 		int left = leftBoud, right = rightBound;

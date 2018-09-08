@@ -19,16 +19,155 @@ import java.util.Stack;
 
 public class SolutionMedium {
 	boolean[] checked;
-
 	SolutionMedium(){
-		//generateParenthesis(1);
-		//divide(Integer.MIN_VALUE,2);
-		//restoreIpAddresses("25525511135");
-		int[] a = {2,0,1};
-		//sortColors(a);
-		int[] a1 = {10,5,2,6};
-		numSubarrayProductLessThanK(a1,100);
+		String s = getPermutation(4,9);
+		System.out.printf("%s \n",s);
 	}
+    public int minPathSum(int[][] grid) {
+    	int[][] arr = new int[grid.length + 1][grid[0].length + 1];
+    	
+    	for(int i = 0; i < arr.length; i ++) {
+    		for(int j = 0; j < arr[0].length; j++) {
+    			if(i == 0) {
+    		    	Arrays.fill(arr[i],Integer.MAX_VALUE);
+    			}
+    			else if(j == 0) {
+    				arr[i][j] = Integer.MAX_VALUE;
+    			}
+    			else
+    				arr[i][j] = grid[i-1][j-1];
+    		}
+    	}
+    	
+    	for(int i = 1; i < grid.length; i ++) {
+    		for(int j = 1; j < grid[0].length; j++) {
+    			int minSteps = Math.min(arr[i-1][j], arr[i][j-1]) == Integer.MAX_VALUE? 0 :
+    				Math.min(arr[i-1][j], arr[i][j-1]);
+    			arr[i][j] = minSteps + arr[i][j];
+    		}
+    	}
+    	return arr[grid.length][grid[0].length];
+    }
+    public ListNode rotateRight(ListNode head, int k) {
+    	int len = 1;
+    	ListNode node = head, tail = null;
+    	if(head == null || head.next == null)
+    		return head;
+    	while(node.next != null) {
+    		node= node.next;
+    		len++;
+    	}
+    	node.next = head; // ring list
+    	k = k%len;
+    	node = head;
+    	
+    	for(int i = 1; i <= len; i++) {
+    		if(i == (len - k)) {
+    			tail = node;
+    		}
+    		if(i == (len - k + 1)) {
+    			head = node;
+    		}
+    		node = node.next;
+    	}
+    	tail.next = null;
+    	return head;
+    }
+    
+    public String getPermutation(int n, int k) {
+        int pNum = 1;
+        StringBuilder sb = new StringBuilder();
+        List<Integer> l = new LinkedList<Integer>();
+        for(int i = 1; i <= n ; i++){
+            pNum*=i;
+            l.add(i);
+        }
+        for(int i = n; i >= 1; i--){
+            int groups = pNum/i;// 6,2,1
+            int q = k/groups; // 9/6 = 1
+            int num = l.get(k%groups == 0 ? q-1 : q); // 21
+            sb.append(String.valueOf(num));
+            l.remove(k%groups == 0 ? q-1 : q);
+            pNum = groups; // 6,2,1
+            k = k- groups * (k%groups == 0 ? q-1 : q); // k = 3,0
+        }
+        return sb.toString();   
+    }
+    public double myPow(double x, int n) {
+    	double ret = 1;
+    	if(n == 0)
+    		return 1;
+    	long absN = Math.abs((long)n);
+    	
+    	while(absN > 0) {
+    		//System.out.printf("%d %f \n",n,x);
+    		if((absN & 1)== 1)
+    			ret *= x;
+    		absN = absN >> 1;
+    		x *=x;
+    	}
+    	return (n < 0)? 1/ret : ret;
+    }
+    public String multiply(String num1, String num2) {
+    	int sLen1 = num1.length(), sLen2 = num2.length();
+    	int ARR_LEN = 220;
+    	int[] result = new int[ARR_LEN];
+    	StringBuilder sb = new StringBuilder();
+    	Arrays.fill(result,0);
+    	
+    	//12 *35
+    	int start = 0 ,end = 0;
+    	for(int i = sLen1 - 1; i >= 0; i--) {//123
+    		int digit = start++;
+    		for(int j = sLen2 - 1;j >= 0; j--) {//456
+    			result[digit++] += (num1.charAt(i) - '0') * (num2.charAt(j) - '0');
+    		}
+    		end = digit;
+    	}
+    	//System.out.printf("%s \n",Arrays.toString(result));
+    	for(int i = 0; i < end; i++) {
+    		sb.append(String.valueOf(result[i] % 10));
+    		result[i + 1] += result[i] / 10;
+    	}
+        if(result[end] != 0)
+            sb.append(String.valueOf(result[end]));
+    	sb.reverse();
+    	if(sb.charAt(0) == '0') {
+    		sb = new StringBuilder("0");
+    	}
+    	return sb.toString();
+    }
+	public void combinationSum2(int[] nums, int cnt, int curSum, 
+			int target, List<Integer> l, Set<List<Integer>> retSet) {
+		if(nums.length > cnt) {
+			return;
+		}
+		if(curSum == target) {
+			retSet.add(l);
+		}
+		for(int i = cnt; i < nums.length; i++) {
+			if(checked[i] != true) {
+				checked[i] = true;
+				List<Integer> l1 = new LinkedList<Integer>(l);
+				combinationSum2(nums,i + 1, curSum + nums[i], target, l1, retSet);
+				checked[i] = false;
+			}
+		}
+		
+	}
+    public List<List<Integer>> combinationSum2(int[] candidates, int target) {
+    	Set<List<Integer>> retSet = new HashSet<List<Integer>>();
+    	List<Integer> l = new LinkedList<Integer>();
+        List<List<Integer>> retList = new LinkedList<List<Integer>>(retSet);
+    	if(candidates.length == 0 || target == 0)
+    		return retList;
+    	
+    	checked = new boolean[candidates.length + 1];
+        Arrays.sort(candidates);
+        combinationSum2(candidates, 0, 0, target, l, retSet);
+        retList = new LinkedList<List<Integer>>(retSet);
+        return retList;
+    }
     public int search(int[] nums, int target) {
     	int ret = -1;
     	if(nums.length <= 0)
@@ -399,28 +538,37 @@ public class SolutionMedium {
     	return ret;
     }
     public ListNode swapPairs(ListNode head) {
-    	ListNode pNode, cNode;
-    	if(head.next == null)
+    	ListNode preNode, curNode, nextNode, retNode;
+    	preNode = curNode = nextNode = retNode = null;
+    	if(head.next == null) // 1 node only
     		return head;
-    	
-    	pNode = head;
-    	cNode = head.next;
     	if(head.next.next == null) {
-    		cNode.next = pNode;
-    		pNode = cNode;
+    		// 2 nodes only
+    		curNode = head;
+    		nextNode = head.next;
+    		head = nextNode;
+    		head.next = curNode;
+    		curNode.next= null;
     		return head;
     	}
-    	while(cNode != null) {
-    		pNode.next = cNode.next;
-    		cNode.next = pNode;
-    		if(pNode.next == null)
+    	preNode = new ListNode(Integer.MIN_VALUE);
+    	curNode = head;
+    	retNode = nextNode = head.next;
+    	
+    	while(curNode != null) {
+    		preNode.next = nextNode;//null - 2
+    		curNode.next = nextNode.next;//1 - 3
+    		nextNode.next = curNode;//2 - 1
+    		
+    		if(curNode.next != null && curNode.next.next != null) {
+        		preNode = preNode.next.next;
+        		curNode = curNode.next;
+        		nextNode = curNode.next;
+    		}
+    		else
     			break;
-    		if(pNode.next.next == null)
-    			break;
-    		pNode = pNode.next;
-    		cNode = pNode.next.next;
     	}
-    	return head;
+    	return retNode;
     }
 	public void permuteUniqueR(int[] nums, int acc, List<Integer> tmpList, Set<List<Integer>> hs) {
 		if(acc == nums.length) {

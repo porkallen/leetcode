@@ -12,9 +12,20 @@ public class Main {
 		ret = ret.replaceAll("]","}");
 		System.out.printf("%s\n",ret);
 	}
+	public static void helper1(int[] nums, int idx, List<Integer> l) {
+		if(idx == nums.length) {
+			for(int i : l)
+				System.out.printf("%d ",i);
+			System.out.printf("\n");
+			return;
+		}
+		for(int i = idx; i < nums.length; i++) {
+			l.add(nums[i]);
+			helper1(nums,i + 1,l);
+			l.remove(l.size() - 1);
+		}
+	}
 	public static void main(String[] args) {
-		Solution0901 s = new Solution0901();
-		//int a = 0;
-		//arrayFormat("[[36,77],[5,54],[5,42],[31,37],[10,36],[15,66],[58,68]]");
+		SolutionMedium s = new SolutionMedium();
     }
 }

@@ -19,7 +19,7 @@ public class Solution0901 {
     			s1.add(i|j);
     		}
     		t = s1;
-    		//s.addAll(t);???
+    		//s.addAll(t);//???
     		for(int j : t)
     			s.add(j);
     	}

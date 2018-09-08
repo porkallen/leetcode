@@ -3,11 +3,6 @@ package leetcode;
 import java.util.Arrays;
 import java.util.List;
 
-class ListNode {
-    int val;
-    ListNode next;
-    ListNode(int x) { val = x; }
-}
 
 public class Solution1202 {
 	public static int strDFS(int row,int col, int[][] arr,int rowLen,int colLen, int nowLen) {
