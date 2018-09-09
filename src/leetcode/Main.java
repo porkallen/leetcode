@@ -26,6 +26,22 @@ public class Main {
 		}
 	}
 	public static void main(String[] args) {
-		SolutionMedium s = new SolutionMedium();
+		//Solution0908 s = new Solution0908();
+		Stack<int[]> s = new Stack<int[]>();
+		int[] a = new int[2];
+		a[0] = 1;
+		a[1] = 2;
+		s.push(a);
+		a = new int[2];
+		a[0] = 2;
+		a[1] = 3;
+		s.push(a);
+		int[] b = s.pop();
+		System.out.printf("%d %d \n",b[0],s.lastElement()[0]);
+		b = s.pop();
+		System.out.printf("%d \n",b[0]);
+
+		
+		
     }
 }

@@ -22,7 +22,90 @@ public class SolutionMedium {
 	SolutionMedium(){
 		String s = getPermutation(4,9);
 		System.out.printf("%s \n",s);
+		int[] a = {1,1};
+		int ret = removeDuplicates(a);
+		System.out.printf("%d %s \n",ret, Arrays.toString(a));
 	}
+	
+    public int removeDuplicates(int[] nums) {
+    	
+    	if(nums.length <= 2)
+    		return nums.length;
+    	
+    	int dupNum = 1, curNum = nums[0], curIdx = 1;
+    	for(int i = 1; i < nums.length; i++) {
+    		if(curNum != nums[i]) {
+    			dupNum = 1;
+    			curNum = nums[i];
+    		}
+    		else {
+    			dupNum++;
+    		}
+    		if(dupNum > 2) {
+    			if(curIdx <= i) {
+    				continue;
+    			}	
+    		}
+    		nums[curIdx++] = nums[i];
+    	}
+    	return curIdx;
+    }
+	boolean existDFS(char[][] board,int[] curp, String word, int idx, boolean[][] checked2) {
+		boolean ret = false;
+		int[][] p = {{0,1},{0,-1},{1,0},{-1,0}};
+		int curX = curp[0], curY = curp[1];
+		int m = board.length, n = board[0].length;
+		if(curp[0] < 0 || curp[0] >= m || curp[0] <0 || curp[1] >= n || idx > word.length()) {
+			return false;
+		}
+		if(idx == word.length()){
+			return true;
+		}
+		if(checked2[curX][curY])
+			return false;
+		
+		for(int i = 0; i < p.length; i++) {
+			int nextX = curX + p[i][0];
+			int nextY = curY + p[i][1];
+			if(nextX >=0 && nextX < m && nextY >= 0 && nextY < n && word.charAt(idx) == board[nextX][nextY]) {
+				int[] nextp = {nextX,nextY};
+				checked2[nextX][nextY] = true;
+				ret |= existDFS(board,nextp,word,idx + 1,checked2);
+				if(ret)
+					return ret;
+			}
+		}
+		return ret;
+	}
+    public boolean exist(char[][] board, String word) {
+    	boolean ret = false;
+    	if(word.length() == 0 || board.length == 0)
+    		return false;
+    	
+    	//Look for the first point
+    	List<int[]> sList = new LinkedList<int[]>(); 
+    	
+    	for(int i = 0; i < board.length; i++) {
+    		for(int j = 0; j < board[0].length; j++) {
+    			if(board[i][j] == word.charAt(0)) {
+    				int[] p = {i,j};
+    				sList.add(p);
+    			}
+    		}
+    	}
+    	for(int i = 0; i < sList.size(); i++) {
+    		boolean[][] checked2 = new boolean[board.length][board[0].length];
+    		for(boolean[] c : checked2)
+    			Arrays.fill(c, false);
+    		int startX = sList.get(i)[0];
+    		int startY = sList.get(i)[1];
+    		checked2[startX][startY] = true;
+    		ret |= existDFS(board,sList.get(i),word,1,checked2);
+    		if(ret)
+    			return true;
+    	}
+    	return ret;
+    }
     public int minPathSum(int[][] grid) {
     	int[][] arr = new int[grid.length + 1][grid[0].length + 1];
     	
