@@ -12,6 +12,10 @@ case $uname in
   *) ;;
 esac
 
-rm -rf $pwd/output
+rm -rf $pwd/bin/output
 mkdir -p $pwd/bin
-echo `$CC -std=c++17 $Args $1 -o $pwd/bin/output`
+$CC -std=c++17 -Wno-c++98-compat -pthread $Args $1 -o $pwd/bin/output
+if [ -f $pwd/bin/output ]; then
+  echo "Running program... \n"
+  $pwd/bin/output
+fi
