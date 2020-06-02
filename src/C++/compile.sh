@@ -3,18 +3,19 @@
 pwd=$(PWD)
 uname=$(uname -s)
 CC=g++
-Args=
+args="-std=c++17 -Wno-c++98-compat -Wno-shadow-field-in-constructor -Wno-c++98-compat-pedantic -Wno-header-hygiene -pthread -Wno-newline-eof -I$pwd/Include "
 case $uname in
   Darwin) 
     CC=clang++ 
-    Args="-stdlib=libc++ -Weverything"
+    args+="-stdlib=libc++ -Weverything "
     ;;
   *) ;;
 esac
 
 rm -rf $pwd/bin/output
 mkdir -p $pwd/bin
-$CC -std=c++17 -Wno-c++98-compat -pthread -I$pwd/Include $Args $1 -o $pwd/bin/output
+echo $args
+$CC $args $1 -o $pwd/bin/output
 if [ -f $pwd/bin/output ]; then
   echo "Running program... \n"
   $pwd/bin/output
