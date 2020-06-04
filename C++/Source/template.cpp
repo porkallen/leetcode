@@ -2,10 +2,15 @@
 
 class Solution {
 public:
+    void foo(){
+
+    }
 };
 
 int main(){
     Solution s;
+    cout << "<Case:" << __FILE__ << ">\n";
+    cout << "==Output==\n";
 #if ENABLE_TREE_TEST_CASE
     TreeNode root(3);
     root.left = new TreeNode(9);
