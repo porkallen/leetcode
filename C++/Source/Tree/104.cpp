@@ -1,9 +1,24 @@
 #include "common.h"
+#define ENABLE_TREE_TEST_CASE 1
 
 class Solution {
 public:
-    void foo(){
+    int maxNum = 0;
+    void dfs(TreeNode *node, int num)
+    {
+        if(!node){
+            return;
+        }
+        if(!node->left && !node->right){
+            maxNum = max(maxNum, num);
+        }
+        dfs(node->left, num + 1);
+        dfs(node->right, num + 1);
+    }
+    int maxDepth(TreeNode* root) {
 
+        dfs(root, 1);
+        return maxNum;
     }
 };
 
@@ -25,5 +40,6 @@ int main(){
           2 15  7
     */
 #endif
+    cout << s.maxDepth(&root);
     return 0;
 }
