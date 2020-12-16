@@ -1,4 +1,6 @@
 #!/bin/sh
+# Shift + Opt + N = Compile
+# 
 
 pwd=$(PWD)
 uname=$(uname -s)
