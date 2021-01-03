@@ -3,34 +3,33 @@
 class Solution {
 public:
 
-    unordered_set<TreeNode*> nodeSet; 
-    void helper(TreeNode* node){
+    map<TreeNode*, int> m;
+
+    array<int, 2> bottomUpHelper(TreeNode* node){
+
         if(!node)
-            return;
+            return {0, 0};
         
-        if(nodeSet.size() == 0){
-            nodeSet.insert(node);
-        }
-        else{
-            bool isContigous = false;
-            for(auto it : nodeSet){
-                if(it == node || it->left = node || it->right == node)
-                {
-                    isContigous = true;
-                    break;
-                }
-            }
-            if(!isContigous)
-            {
-                nodeSet.insert(node);
-            }
-        }
-        helper();
+        array<int, 2> left = bottomUpHelper(node->left);
+        array<int, 2> right = bottomUpHelper(node->right);
+
+        array<int,2> ret;
+        ret[0] = max(left[0], left[1]) + max(right[0], right[1]); // ret[0] is the sum of node was not robbed.
+        ret[1] = node->val + left[0] + right[0]; // ret[1] is the sum of node was robbeed
+        return ret;
+    }
+    int topDownHelper(TreeNode* node){
+        if(!node)
+            return 0;
         
-    
+        if(m.find(node) == m.end()){
+            m[node] = max(node->val + (node->left ? topDownHelper(node->left->left) : 0) + (node->left ? topDownHelper(node->left->right) : 0) + (node->right ? topDownHelper(node->right->left) : 0) +(node->right ? topDownHelper(node->right->right) : 0), topDownHelper(node->left) + topDownHelper(node->right));
+        }
+        return m[node]; 
     }
     int rob(TreeNode* root) {
-        
+        //return topDownHelper(root);
+        return max(bottomUpHelper(root)[0], bottomUpHelper(root)[1]);
     }
 };
 

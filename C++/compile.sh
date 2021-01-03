@@ -1,6 +1,6 @@
 #!/bin/sh
 # Shift + Opt + N = Compile
-# 
+# Shift + Opt + M = Stop
 
 pwd=$(PWD)
 uname=$(uname -s)

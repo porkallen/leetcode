@@ -15,6 +15,7 @@
 #include <tuple>
 #include <unordered_map>
 #include <climits>
+#include <array>
 using namespace std;
 
  struct TreeNode {
