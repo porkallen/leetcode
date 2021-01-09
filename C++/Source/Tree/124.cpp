@@ -3,6 +3,23 @@
 class Solution {
 public:
     int maxVal = INT32_MIN;
+    int helper(TreeNode* node){
+        int ret = 0;
+        if(!node)
+            return 0;
+        
+        int left = helper(node->left);
+        int right = helper(node->right);
+
+        ret = max(node->val, node->val + left);
+        ret = max(ret, node->val + right);
+        //ret = max(ret, node->val + left + right);
+
+        maxVal = max(maxVal, ret);
+        maxVal = max(maxVal, node->val + left + right);
+
+        return ret;
+    }
     void postOrderHelper(TreeNode *node, map<TreeNode *, pair<int, int>>& m)
     {
         if(!node)
@@ -23,7 +40,9 @@ public:
         map<TreeNode *, pair<int, int>> m;
         if (!root->left && !root->right)
             return root->val;
-        postOrderHelper(root, m);
+        //postOrderHelper(root, m);
+
+        helper(root);
         return maxVal;
     }
 };
