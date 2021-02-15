@@ -16,6 +16,8 @@
 #include <unordered_map>
 #include <climits>
 #include <array>
+#include <sstream>
+
 using namespace std;
 
  struct TreeNode {
