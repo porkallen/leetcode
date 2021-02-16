@@ -1,28 +1,55 @@
 #include "common.h"
 
-class Solution {
+class MyStack {
+private:
+    deque<int> q1,q2;
+
 public:
-    string simplifyPath(string path) {
-        stack<char> s;
-        string retStr;
-
-        if(path.length() == 0){
-            return path;
+    /** Initialize your data structure here. */
+    MyStack() {
+        
+    }
+    
+    /** Push element x onto stack. */
+    void push(int x) {
+        q1.push_back(x);
+    }
+    
+    /** Removes the element on top of the stack and returns that element. */
+    int pop() {
+        int ret = top();
+        q2.pop_front();
+        return ret;
+    }
+    
+    /** Get the top element. */
+    int top() {
+        int ret;
+        while(!q1.empty()){
+                int tmp = q1.front();
+                q1.pop_front();
+                q2.push_front(tmp);
         }
-
-        s.push(path[0]);
-
-        for(auto c:path){
-         
-
-        }
-
-
+        return q2.front();
+    }
+    
+    /** Returns whether the stack is empty. */
+    bool empty() {
+        return q1.empty() && q2.empty();
     }
 };
 
+/**
+ * Your MyStack object will be instantiated and called as such:
+ * MyStack* obj = new MyStack();
+ * obj->push(x);
+ * int param_2 = obj->pop();
+ * int param_3 = obj->top();
+ * bool param_4 = obj->empty();
+ */
+
 int main(){
-    Solution s;
+    MyStack s;
     cout << "<Case:" << __FILE__ << ">\n";
     cout << "==Output==\n";
 #if ENABLE_TREE_TEST_CASE

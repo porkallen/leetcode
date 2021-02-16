@@ -22,10 +22,14 @@ public:
                 toks.push_back(tok);
             }
         }
+
         ret = "/";
         for(auto it : toks){
+            cout << it << endl;
             ret += it + "/";
         }
+        if(ret != "/")
+            ret.erase(ret.end() - 1);
         return ret;
     }
 };
@@ -35,6 +39,6 @@ int main(){
     cout << "<Case:" << __FILE__ << ">\n";
     cout << "==Output==\n";
 
-    cout << "c path:" << s.simplifyPath("/home/") << endl;
+    cout << "c path:" << s.simplifyPath("/a/./b/../../c/") << endl;
     return 0;
 }
