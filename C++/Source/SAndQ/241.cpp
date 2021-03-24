@@ -4,28 +4,26 @@ class Solution {
 public:
 
     vector<int> helper(string s){
-        
-        int num = 0;
+
         vector<int> ret;
         for(int i = 0; i < s.length(); i++){
-
-            if(!isdigit(s[i])){            
+            if(!isdigit(s[i])){
                 vector<int> v1 = helper(s.substr(0, i));
-                vector<int> v2 = helper(s.substr(i + 1));
-                
-                for(auto it1 : v1){
+                vector<int> v2 = helper(s.substr(i+1));
+
+                for(auto it : v1){
                     for(auto it2 : v2){
                         if(s[i] == '+'){
-                            ret.push_back(it1 + it2);
+                            ret.push_back(it + it2);
                         }
                         else if(s[i] == '-'){
-                            ret.push_back(it1 - it2);
-                        }
+                            ret.push_back(it - it2);
+                        }  
                         else if(s[i] == '*'){
-                            ret.push_back(it1 * it2);
+                            ret.push_back(it * it2);
                         }
                         else{
-                            ret.push_back(it1 / it2);
+                            ret.push_back(it / it2);
                         }
                     }
                 }
@@ -34,7 +32,7 @@ public:
         
         if(ret.size() == 0)
             ret.push_back(stoi(s));
-        
+
         return ret;
     }
     vector<int> diffWaysToCompute(string input) {
