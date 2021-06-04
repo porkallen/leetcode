@@ -68,10 +68,22 @@ public:
         if(dict.begin()->second.size() != m.begin()->second.size())
             return s;
         
-        for(auto it : dict){ // col
-            for(auto it2 : it.second){ // row
-                if(m.find(it2.first) != m.end()){ // if dict's row == m's col
+        for(auto it : dict){ // row
+            for(auto it2 : it.second){ // col
+                if(m.find(it2.first) != m.end()){ // if dict's col == m's row
                     for(auto it3 : m.find(it2.first)->second){
+                        /*
+                         * Example
+
+                           [1,0,1]   [7,0,0]
+                           [-,0,3]   [0,0,0]
+                                     [0,0,1]
+                         * 2x3 matrixs v.s 3x2 matrixs
+
+                           The second row of new matrix will be [m01 x n10, m11 x n11]
+                         * 
+                         * 
+                         * */
                         ret[it.first][it3.first] += dict[it.first][it2.first] * m.at(it2.first).at(it3.first);
                     }
                 }
@@ -81,6 +93,29 @@ public:
         return s;
     };
 
+};
+#pragma Lower Bound search with simple LRU
+class LowerBoundSearch{
+public:
+    struct Object{
+        float timestamp;
+        float data;
+    };
+    vector<Object> v; 
+    LowerBoundSearch(){
+        for(int i = 0; i < 10; i++){
+            float f = 1.0f;
+            v.push_back(Object{f+i,f+i});
+        }
+    }
+    Object get(float timestamp){
+        auto obj = lower_bound(v.begin(), v.end(), Object{7.5, 0}, [](const Object& a, const Object& b){
+            return a.timestamp < b.timestamp;
+        });
+        int id = obj - v.begin();
+        printf("timestamp:%f /%f , %d \n",timestamp, v[1].data, id);
+        return *obj;
+    }
 };
 #pragma TODO: Find the smallest comment element in n sorted arrays 
 
@@ -105,13 +140,43 @@ public:
         return -1;
     }
 };
-#pragma TODO: Shuffle a card deck
-//https://www.cplusplus.com/reference/cstdlib/rand/
+#pragma Shuffle a card deck
 class MyDeck{
+public:
     struct Card{
         int num;
         int type;
     };
+private:
+    vector<Card> _deck;
+    int curIdx = 0;
+public:
+
+    MyDeck(){
+        for(int i = 1; i <= 13; i++){
+            for(int j = 0; j < 4; j++){
+                _deck.push_back(Card{i,j});
+            }
+        }
+    }
+    void shuffle(){
+        vector<Card> tmpDeck;
+        unordered_map<int,int> dp;
+        srand(time(NULL));
+        int sz = _deck.size();
+        while(tmpDeck.size() < sz){
+            int idx = rand() % sz + 1;
+            if(dp.find(idx) == dp.end()){
+                tmpDeck.push_back(_deck[idx]);
+                dp[idx] = 1;
+            }
+        }
+        _deck = tmpDeck;
+        curIdx = 0;
+    }
+    Card get(void){
+        return _deck[curIdx++];
+    }
 };
 
 #pragma Queue Implementation
@@ -335,7 +400,7 @@ public:
     MemPool(int blockNum);
     void* memAlloc();
     void memFree(void *p);
-    ~MemPool();
+    ~MemPool() {free(headP);}
 };
 
 MemPool::MemPool(int blockNum){
@@ -444,8 +509,8 @@ public:
 };
 
 #pragma Main
-int main(void){
 
+int main(void){
 #ifdef C_LEVEL_LINKED_LIST
     MyNode* head = nodeInit(10);
     head = removeElements(head, 9);
@@ -453,7 +518,7 @@ int main(void){
     head = reverse(head);
     allNodesDump(head);
 #endif
-
+#if 0
     SolutionSparseMatrix<int> s;
     s.set(0,0,1);
     s.set(1,0,-1);
@@ -469,25 +534,51 @@ int main(void){
     ret.dump();
     cout << (long)1e9 << endl;
 
-    std::set<int> myset;
-    std::set<int>::iterator itlow,itup;
+    vector<int> v = {1,2,3,4,5,6,7,8};
 
-    for (int i=1; i<10; i++) myset.insert(i*10); // 10 20 30 40 50 60 70 80 90
+    auto p = [&](int num){
+        bool isPrime = true;
+        if(num == 0 || num == 1)
+            return false;
+        
+        for(int i = 2; i <= num/2; i++){
+            if(num % i == 0)
+                return false;
+        }
+        return true;
+    };
 
-    itlow=myset.lower_bound (25);                //       ^
-    itup=myset.upper_bound (60);                 //                   ^
+    cout << p(13) << endl;
 
-    myset.erase(itlow,itup);                     // 10 20 70 80 90
+    vector<list<int>> adjList(10);
+    adjList[1].push_back(10);
 
-    std::cout << "myset contains:";
-    for (std::set<int>::iterator it=myset.begin(); it!=myset.end(); ++it)
-        std::cout << ' ' << *it;
-    std::cout << '\n';
+    thread t([](int a){
+        printf("?\n");
+    }, 1);
+    t.join();
 
-    vector<vector<int>> v = {{1,4},{2,4},{3,6},{4,4}};
-    sort(v.begin(), v.end());
+    LowerBoundSearch lbs;
+    auto it = lbs.get(2.5);
+    printf("%f %f \n",it.timestamp, it.data);
 
-    for(auto it : v)
-        printf(" (%d,%d) \n",it[0], it[1]);
+
+    MyDeck md;
+    md.shuffle();
+    MyDeck::Card node = md.get();
+    cout << node.num <<" " << node.type << endl;
+
+    vector<vector<int>> v1 = {
+        {1,2,3,4,5,6,7,8},
+        {5,6,7,8,9},
+        {1,2,3,5,6,7}
+    };
+    SolutionFindSmallestCommentElement ssce;
+    cout << "ssce" << ssce.findSmallestCommonElements(v1) << endl;
+
+    vector<int> v2 = {20,20,20,20,20,20};
+
+    cout << "lower bound:" << lower_bound(v2.begin(), v2.end(), 10) - v2.begin() << "upper bound" << upper_bound(v2.begin(), v2.end(), 20) - v2.begin() << endl;
+#endif
     return 0;
 }
